@@ -1,4 +1,4 @@
-const splash_logo = `<?xml version="1.0" encoding="utf-8"?>
+const centeredLogo = `<?xml version="1.0" encoding="utf-8"?>
 <svg width="143px" height="39px" viewBox="0 0 143 39" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
   <g id="Logo">
     <g id="Logo-Text-" transform="translate(39.2549 5.571429)">
@@ -20,4 +20,4 @@ const splash_logo = `<?xml version="1.0" encoding="utf-8"?>
   </g>
 </svg>`;
 
-export default splash_logo;
+export default centeredLogo;
