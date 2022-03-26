@@ -1013,7 +1013,7 @@
     pirates "^4.0.5"
     source-map-support "^0.5.16"
 
-"@babel/runtime@^7.14.0", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.14.0", "@babel/runtime@^7.15.4", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   version "7.17.8"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.17.8.tgz"
   integrity sha512-dQpEpK0O9o6lj6oPu0gRDbbnk+4LeHlNcBpspf6Olzt3GIX4P1lWF1gS+pHLDFlaJvbR6q7jCfQ08zA4QJBnmA==
@@ -1526,6 +1526,14 @@
   resolved "https://registry.npmjs.org/@types/hammerjs/-/hammerjs-2.0.41.tgz"
   integrity sha512-ewXv/ceBaJprikMcxCmWU1FKyMAQ2X7a9Gtmzw8fcg2kIePI1crERDM818W+XYrxqdBBOdlf2rm137bU+BltCA==
 
+"@types/hoist-non-react-statics@^3.3.0":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
+  integrity sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==
+  dependencies:
+    "@types/react" "*"
+    hoist-non-react-statics "^3.3.0"
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.4"
   resolved "https://registry.npmjs.org/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.4.tgz"
@@ -1549,6 +1557,35 @@
   version "17.0.22"
   resolved "https://registry.npmjs.org/@types/node/-/node-17.0.22.tgz"
   integrity sha512-8FwbVoG4fy+ykY86XCAclKZDORttqE5/s7dyWZKLXTdv3vRy5HozBEinG5IqhvPXXzIZEcTVbuHlQEI6iuwcmw==
+
+"@types/prop-types@*":
+  version "15.7.4"
+  resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.4.tgz#fcf7205c25dff795ee79af1e30da2c9790808f11"
+  integrity sha512-rZ5drC/jWjrArrS8BR6SIr4cWpW09RNTYt9AMZo3Jwwif+iacXAqgVjm0B0Bv/S1jhDXKHqRVNCbACkJ89RAnQ==
+
+"@types/react-redux@^7.1.20":
+  version "7.1.23"
+  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.23.tgz#3c2bb1bcc698ae69d70735f33c5a8e95f41ac528"
+  integrity sha512-D02o3FPfqQlfu2WeEYwh3x2otYd2Dk1o8wAfsA0B1C2AJEFxE663Ozu7JzuWbznGgW248NaOF6wsqCGNq9d3qw==
+  dependencies:
+    "@types/hoist-non-react-statics" "^3.3.0"
+    "@types/react" "*"
+    hoist-non-react-statics "^3.3.0"
+    redux "^4.0.0"
+
+"@types/react@*":
+  version "17.0.43"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.43.tgz#4adc142887dd4a2601ce730bc56c3436fdb07a55"
+  integrity sha512-8Q+LNpdxf057brvPu1lMtC5Vn7J119xrP1aq4qiaefNioQUYANF/CYeK4NsKorSZyUGJ66g0IM+4bbjwx45o2A==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
+"@types/scheduler@*":
+  version "0.16.2"
+  resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
+  integrity sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==
 
 "@types/yargs-parser@*":
   version "21.0.0"
@@ -2357,6 +2394,11 @@ css-what@^3.2.1:
   resolved "https://registry.npmjs.org/css-what/-/css-what-3.4.2.tgz"
   integrity sha512-ACUm3L0/jiZTqfzRM3Hi9Q8eZqd6IK37mMWPLz9PJxkLWllYeRf+EHUSHYEtFop2Eqytaq1FizFVh7XfBnXCDQ==
 
+csstype@^3.0.2:
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.11.tgz#d66700c5eacfac1940deb4e3ee5642792d85cd33"
+  integrity sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==
+
 dayjs@^1.8.15:
   version "1.11.0"
   resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.11.0.tgz"
@@ -2621,15 +2663,7 @@ expo-asset@~8.4.6:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
-expo-constants@^13.0.2:
-  version "13.0.2"
-  resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-13.0.2.tgz#b489ecd575cc82a9a0b3dfbf2385d45a44300eb1"
-  integrity sha512-vGs/kI65vplPFvG8z4W1ariGEtVHHp9Avl28G0zJprt2v/q1E/BnXjwvFSBPc1GB+Zb/7crWSHWRwjaFULBjsg==
-  dependencies:
-    "@expo/config" "^6.0.6"
-    uuid "^3.3.2"
-
-expo-constants@~13.0.2:
+expo-constants@^13.0.2, expo-constants@~13.0.2:
   version "13.0.2"
   resolved "https://registry.npmjs.org/expo-constants/-/expo-constants-13.0.2.tgz"
   integrity sha512-vGs/kI65vplPFvG8z4W1ariGEtVHHp9Avl28G0zJprt2v/q1E/BnXjwvFSBPc1GB+Zb/7crWSHWRwjaFULBjsg==
@@ -3123,7 +3157,7 @@ hermes-profile-transformer@^0.0.6:
   dependencies:
     source-map "^0.7.3"
 
-hoist-non-react-statics@^3.3.0:
+hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
@@ -4628,7 +4662,7 @@ react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-is@^17.0.1:
+react-is@^17.0.1, react-is@^17.0.2:
   version "17.0.2"
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
@@ -4725,6 +4759,18 @@ react-native@0.64.3:
     whatwg-fetch "^3.0.0"
     ws "^6.1.4"
 
+react-redux@^7.2.6:
+  version "7.2.6"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.6.tgz#49633a24fe552b5f9caf58feb8a138936ddfe9aa"
+  integrity sha512-10RPdsz0UUrRL1NZE0ejTkucnclYSgXp5q+tB5SWx2qeG2ZJQJyymgAhwKy73yiL/13btfB6fPr+rgbMAaZIAQ==
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    "@types/react-redux" "^7.1.20"
+    hoist-non-react-statics "^3.3.2"
+    loose-envify "^1.4.0"
+    prop-types "^15.7.2"
+    react-is "^17.0.2"
+
 react-refresh@^0.4.0:
   version "0.4.3"
   resolved "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.3.tgz"
@@ -4767,6 +4813,13 @@ rechoir@^0.6.2:
   integrity sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=
   dependencies:
     resolve "^1.1.6"
+
+redux@^4.0.0, redux@^4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.1.2.tgz#140f35426d99bb4729af760afcf79eaaac407104"
+  integrity sha512-SH8PglcebESbd/shgf6mii6EIoRM0zrQyjcuQ+ojmfxjTtE0z9Y8pa62iA/OJ58qjP6j27uyW4kUF4jl/jd6sw==
+  dependencies:
+    "@babel/runtime" "^7.9.2"
 
 regenerate-unicode-properties@^10.0.1:
   version "10.0.1"

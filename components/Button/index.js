@@ -3,9 +3,15 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import colors from "../../utils/colors";
 
+import { AntDesign } from "@expo/vector-icons";
+
 const Button = (props) => {
   return (
-    <TouchableOpacity style={props.big ? styles.big : styles.small}>
+    <TouchableOpacity
+      onPress={() => props.setModalVisible(true)}
+      style={props.big ? styles.big : styles.small}
+    >
+      {!props.small && <AntDesign name="plus" size={24} color={colors.green} />}
       <Text style={styles.btnName}>{props.btnName}</Text>
     </TouchableOpacity>
   );
@@ -22,16 +28,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   small: {
-    backgroundColor: colors.green,
-    width: 120,
-    height: 50,
+    backgroundColor: colors.white,
+    width: 100,
+    height: 30,
     marginTop: 10,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     borderRadius: 10,
+    flexDirection: "row",
+    borderWidth: 1,
+    borderColor: colors.green
   },
   btnName: {
-    color: colors.white,
+    color: colors.green,
     fontSize: 16,
     fontWeight: "700",
   },

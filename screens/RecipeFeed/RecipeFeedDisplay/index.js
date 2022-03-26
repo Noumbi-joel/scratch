@@ -1,10 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+
+//components
+import Recipe from "../../../components/Recipe";
 
 const RecipeFeedDisplay = (props) => {
   return (
     <View style={styles.container}>
-      <Text>Recipe Feed Display</Text>
+      <ScrollView horizontal>
+        <Recipe />
+        <Recipe />
+        <Recipe />
+        <Recipe />
+      </ScrollView>
     </View>
   );
 };
@@ -12,8 +20,7 @@ const RecipeFeedDisplay = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    
   },
 });
 
