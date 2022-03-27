@@ -35,8 +35,6 @@ const Recipe = (props) => {
               height: 32,
               margin: 10,
               borderRadius: 12,
-              borderWidth: 1,
-              borderColor: "red",
             }}
           />
           <View style={{ flexDirection: "column" }}>
@@ -90,14 +88,7 @@ const Recipe = (props) => {
           Apparently we had reached a great height ...
         </Text>
 
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-around",
-            width: "100%",
-          }}
-        >
+        <View style={styles.footerContainer}>
           <Text style={{ color: "#606060" }}>32 likes</Text>
           <Text style={{ color: "#606060" }}>8 Comments</Text>
           <Button setModalVisible={setModalVisible} btnName="Save" />
@@ -126,6 +117,12 @@ const styles = StyleSheet.create({
     },
     elevation: 2,
     shadowRadius: 2,
+  },
+  footerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    width: "100%",
   },
 });
 

@@ -30,20 +30,15 @@ const RecipeFeedSaveRecipe = (props) => {
             <Text>Vegies</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          style={[
-            styles.btnCategory,
-            {
-              width: 165,
-              flexDirection: "row",
-              alignItems: "center",
-              marginVertical: 0,
-              mar
-            },
-          ]}
-        >
-          <AntDesign name="plus" size={24} color={colors.white} />
-          <Text style={{ color: colors.white, fontWeight: "700" }}>
+        <TouchableOpacity style={styles.footerBtn}>
+          <AntDesign name="plus" size={24} color={colors.green} />
+          <Text
+            style={{
+              color: colors.white,
+              fontWeight: "700",
+              color: colors.green,
+            }}
+          >
             Add New Cookbook
           </Text>
         </TouchableOpacity>
@@ -70,8 +65,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.1)",
   },
   btnCategory: {
-    marginVertical: 10,
+    marginVertical: 5,
     backgroundColor: colors.green,
+    paddingVertical: 5,
+    borderRadius: 8,
+    paddingLeft: 10,
+  },
+  footerBtn: {
+    width: 165,
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
     paddingVertical: 5,
     borderRadius: 8,
     paddingLeft: 10,

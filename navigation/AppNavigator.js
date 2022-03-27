@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Image, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -27,7 +27,8 @@ import SearchSuggestion from "../screens/Search/SearchSuggestion";
 
 //RecipeFeed Stack
 import RecipeFeedDisplay from "../screens/RecipeFeed/RecipeFeedDisplay";
-import RecipeFeedSaveRecipe from "../screens/RecipeFeed/RecipeFeedSaveRecipe";
+import BrowseMyRecipeDisplay from "../screens/BrowseMyRecipe/BrowseMyRecipeDisplay";
+import ViewRecipe from "../screens/BrowseMyRecipe/ViewRecipe";
 
 //Profile Stack
 import UserProfile from "../screens/Profile/UserProfile";
@@ -45,6 +46,7 @@ import notifs from "../assets/svg/notification";
 import msg from "../assets/svg/msg";
 import logo from "../assets/svg/logo";
 import logoText from "../assets/svg/centered-logo";
+import settings from "../assets/svg/setting";
 
 //colors
 import colors from "../utils/colors";
@@ -103,10 +105,6 @@ const RecipeFeedStack = (props) => {
         }}
         component={RecipeFeedDisplay}
       />
-      <Stack.Screen
-        name="RecipeFeedSaveRecipe"
-        component={RecipeFeedSaveRecipe}
-      />
     </Stack.Navigator>
   );
 };
@@ -124,7 +122,26 @@ const SearchStack = (props) => {
 const ProfileStack = (props) => {
   return (
     <Stack.Navigator initialRouteName="UserProfile">
-      <Stack.Screen name="UserProfile" component={UserProfile} />
+      <Stack.Screen
+        name="UserProfile"
+        options={{
+          headerTitle: "My Kitchen",
+          headerRight: () => (
+            <TouchableOpacity
+              style={{
+                width: 60,
+                flexDirection: "row",
+                alignItems: "center",
+                marginRight: 60,
+              }}
+            >
+              <SvgXml xml={settings} width="100%" />
+              <Text>Settings</Text>
+            </TouchableOpacity>
+          ),
+        }}
+        component={UserProfile}
+      />
       <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>
   );

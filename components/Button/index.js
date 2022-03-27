@@ -11,7 +11,11 @@ const Button = (props) => {
       onPress={() => props.setModalVisible(true)}
       style={props.big ? styles.big : styles.small}
     >
-      {!props.small && <AntDesign name="plus" size={24} color={colors.green} />}
+      {!props.small ? (
+        <AntDesign name="plus" size={24} color={colors.green} />
+      ) : (
+        <AntDesign name="caretright" size={20} color={colors.green} />
+      )}
       <Text style={styles.btnName}>{props.btnName}</Text>
     </TouchableOpacity>
   );
@@ -29,7 +33,7 @@ const styles = StyleSheet.create({
   },
   small: {
     backgroundColor: colors.white,
-    width: 100,
+    width: 90,
     height: 30,
     marginTop: 10,
     alignItems: "center",
@@ -37,7 +41,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: "row",
     borderWidth: 1,
-    borderColor: colors.green
+    borderColor: colors.green,
   },
   btnName: {
     color: colors.green,
