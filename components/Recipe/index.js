@@ -91,7 +91,7 @@ const Recipe = (props) => {
         <View style={styles.footerContainer}>
           <Text style={{ color: "#606060" }}>32 likes</Text>
           <Text style={{ color: "#606060" }}>8 Comments</Text>
-          <Button setModalVisible={setModalVisible} btnName="Save" />
+          <Button saveRecipe setModalVisible={setModalVisible}  btnName="Save" />
         </View>
       </View>
     </View>

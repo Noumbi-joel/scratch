@@ -6,15 +6,26 @@ import colors from "../../utils/colors";
 import { AntDesign } from "@expo/vector-icons";
 
 const Button = (props) => {
+  if (props.big) {
+    return (
+      <TouchableOpacity style={styles.big}>
+        <Text style={styles.btnName}>{props.btnName}</Text>
+      </TouchableOpacity>
+    );
+  }
   return (
     <TouchableOpacity
-      onPress={() => props.setModalVisible(true)}
-      style={props.big ? styles.big : styles.small}
+      style={styles.small}
+      onPress={
+        props.saveRecipe
+          ? () => props.setModalVisible(true)
+          : () => props.navigation.navigate(props.goto)
+      }
     >
-      {!props.small ? (
+      {props.saveRecipe ? (
         <AntDesign name="plus" size={24} color={colors.green} />
       ) : (
-        <AntDesign name="caretright" size={20} color={colors.green} />
+        <AntDesign name="caretright" size={24} color={colors.green} />
       )}
       <Text style={styles.btnName}>{props.btnName}</Text>
     </TouchableOpacity>
@@ -33,7 +44,7 @@ const styles = StyleSheet.create({
   },
   small: {
     backgroundColor: colors.white,
-    width: 90,
+    width: 105,
     height: 30,
     marginTop: 10,
     alignItems: "center",

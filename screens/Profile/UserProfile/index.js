@@ -107,7 +107,7 @@ const UserProfile = (props) => {
       >
         {recipes && (
           <>
-            <View
+            <TouchableOpacity
               style={{
                 width: 150,
                 height: 132,
@@ -116,6 +116,7 @@ const UserProfile = (props) => {
                 borderWidth: 1,
                 borderColor: "red",
               }}
+              onPress={() => props.navigation.navigate("BrowseMyRecipeDisplay")}
             >
               <ImageBackground
                 resizeMode="cover"
@@ -132,7 +133,7 @@ const UserProfile = (props) => {
               >
                 Italian
               </Text>
-            </View>
+            </TouchableOpacity>
 
             <View
               style={{

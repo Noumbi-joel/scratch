@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
 //component
 import Button from "../Button";
@@ -22,7 +28,7 @@ const MyClassifiedRecipe = (props) => {
       <View style={styles.footerContainer}>
         <Text style={styles.footerText}>± 5 mins</Text>
         <Text style={styles.footerText}>4 ingredients</Text>
-        <Button btnName="Cook" small />
+        <Button {...props} btnName="Cook" goto="ViewRecipe" />
       </View>
     </TouchableOpacity>
   );

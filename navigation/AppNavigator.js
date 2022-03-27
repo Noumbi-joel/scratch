@@ -33,6 +33,8 @@ import ViewRecipe from "../screens/BrowseMyRecipe/ViewRecipe";
 //Profile Stack
 import UserProfile from "../screens/Profile/UserProfile";
 import EditProfile from "../screens/Profile/EditProfile";
+import CookingModeDisplay from "../screens/CookingMode/CookingModeDisplay";
+import CookingModeFullScreen from "../screens/CookingMode/CookingModeFullScreen";
 import OtherUserProfile from "../screens/Profile/OtherUserProfile";
 
 //images
@@ -141,6 +143,32 @@ const ProfileStack = (props) => {
           ),
         }}
         component={UserProfile}
+      />
+      <Stack.Screen
+        options={{
+          headerTitle: "Back to My Profile",
+          headerTitleStyle: { fontSize: 16, color: colors.grey },
+        }}
+        name="BrowseMyRecipeDisplay"
+        component={BrowseMyRecipeDisplay}
+      />
+      <Stack.Screen
+        name="ViewRecipe"
+        options={{ headerShown: false }}
+        component={ViewRecipe}
+      />
+      <Stack.Screen
+        name="CookingModeDisplay"
+        options={{
+          headerTitle: "Back to My Recipes",
+          headerTitleStyle: { fontSize: 16, color: colors.grey },
+        }}
+        component={CookingModeDisplay}
+      />
+      <Stack.Screen
+        name="CookingModeFullScreen"
+        options={{ headerShown: false }}
+        component={CookingModeFullScreen}
       />
       <Stack.Screen name="EditProfile" component={EditProfile} />
     </Stack.Navigator>

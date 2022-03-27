@@ -61,19 +61,15 @@ const BrowseMyRecipe = (props) => {
       {/*       <MaterialIcons name="keyboard-arrow-up" size={30} color="black" />*/}
       <View
         style={{
-          flexDirection: "row",
-          marginVertical: 25,
-          width: "100%",
-          justifyContent: "space-around",
+          alignItems: "center",
+          marginTop: 20,
         }}
       >
         <Text style={{ fontSize: 16, fontWeight: "400", color: colors.black }}>
-          Western (5)
+          Western (recipe number)
         </Text>
-        <MaterialIcons name="keyboard-arrow-down" size={30} color="black" />
       </View>
-      <MyClassifiedRecipe />
-      <MyClassifiedRecipe />
+      <MyClassifiedRecipe {...props} />
     </ScrollView>
   );
 };
