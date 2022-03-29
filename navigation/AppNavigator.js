@@ -35,6 +35,7 @@ import UserProfile from "../screens/Profile/UserProfile";
 import EditProfile from "../screens/Profile/EditProfile";
 import CookingModeDisplay from "../screens/CookingMode/CookingModeDisplay";
 import CookingModeFullScreen from "../screens/CookingMode/CookingModeFullScreen";
+import Settings from "../screens/Settings";
 import OtherUserProfile from "../screens/Profile/OtherUserProfile";
 
 //images
@@ -49,6 +50,7 @@ import msg from "../assets/svg/msg";
 import logo from "../assets/svg/logo";
 import logoText from "../assets/svg/centered-logo";
 import settings from "../assets/svg/setting";
+import logout from "../assets/svg/signout";
 
 //colors
 import colors from "../utils/colors";
@@ -136,6 +138,7 @@ const ProfileStack = (props) => {
                 alignItems: "center",
                 marginRight: 60,
               }}
+              onPress={() => props.navigation.navigate("Settings")}
             >
               <SvgXml xml={settings} width="100%" />
               <Text>Settings</Text>
@@ -170,7 +173,36 @@ const ProfileStack = (props) => {
         options={{ headerShown: false }}
         component={CookingModeFullScreen}
       />
-      <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen
+        options={{
+          headerTitle: "Back to My Profile",
+          headerTitleStyle: { fontSize: 16, color: colors.grey },
+        }}
+        name="EditProfile"
+        component={EditProfile}
+      />
+      <Stack.Screen
+        options={{
+          headerTitle: "Back to My Profile",
+          headerTitleStyle: { fontSize: 16, color: colors.grey },
+          headerRight: () => (
+            <TouchableOpacity
+              style={{
+                width: 60,
+                flexDirection: "row",
+                alignItems: "center",
+                marginRight: 60,
+              }}
+              onPress={() => console.log("logout")}
+            >
+              <SvgXml xml={logout} width="100%" />
+              <Text>Log Out</Text>
+            </TouchableOpacity>
+          ),
+        }}
+        name="Settings"
+        component={Settings}
+      />
     </Stack.Navigator>
   );
 };

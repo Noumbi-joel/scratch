@@ -19,6 +19,7 @@
     "expo-av": "~10.2.0",
     "expo-constants": "^13.0.2",
     "expo-status-bar": "~1.2.0",
+    "formik": "^2.2.9",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
@@ -28,7 +29,8 @@
     "react-native-svg": "^12.1.1",
     "react-native-web": "0.17.1",
     "react-redux": "^7.2.6",
-    "redux": "^4.1.2"
+    "redux": "^4.1.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

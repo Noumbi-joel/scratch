@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
+  Dimensions
 } from "react-native";
 
 import raisin from "../../../assets/png/raisin.jpg";

@@ -17,7 +17,10 @@ import raisin from "../../assets/png/raisin.jpg";
 
 const MyClassifiedRecipe = (props) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={() => props.navigation.navigate("ViewRecipe")}
+    >
       <ImageBackground
         source={raisin}
         resizeMode="cover"

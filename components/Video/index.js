@@ -1,24 +1,21 @@
 import React from "react";
-import { View, Text, Stylesheet } from "react-native";
+
+import { StyleSheet } from "react-native";
 
 //expo-av
-import { Video } from "expo-av";
+import { Video, AVPlaybackStatus } from "expo-av";
 
-const Video = (props) => {
+const VideoPlayer = (props) => {
   return (
-    <View>
-      <Video
-        ref={video}
-        style={styles.video}
-        source={{
-          uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
-        }}
-        useNativeControls
-        resizeMode="contain"
-        isLooping
-        onPlaybackStatusUpdate={(status) => setStatus(() => status)}
-      />
-    </View>
+    <Video
+      style={styles.video}
+      source={{
+        uri: "http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4",
+      }}
+      useNativeControls
+      resizeMode="contain"
+      isLooping
+    />
   );
 };
 
@@ -29,4 +26,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Video;
+export default VideoPlayer;

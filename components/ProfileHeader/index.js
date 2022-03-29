@@ -42,7 +42,10 @@ const ProfileHeader = (props) => {
           >
             Nick Evans
           </Text>
-          <SvgXml xml={pen} />
+          <SvgXml
+            xml={pen}
+            onPress={() => props.navigation.navigate("EditProfile")}
+          />
         </View>
         <Text style={{ fontSize: 14, color: "#606060" }}>Potato Master</Text>
         <View

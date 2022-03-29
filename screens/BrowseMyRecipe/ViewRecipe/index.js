@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 //images and icons
@@ -15,9 +16,11 @@ import { AntDesign } from "@expo/vector-icons";
 
 import Constants from "expo-constants";
 
+//components
+import Button from "../../../components/Button";
+
 //colors
 import colors from "../../../utils/colors";
-import Button from "../../../components/Button";
 
 const ViewRecipe = (props) => {
   const [ingredients, setIngredients] = useState(true);
@@ -48,8 +51,16 @@ const ViewRecipe = (props) => {
               alignItems: "center",
             }}
           >
-            <AntDesign name="arrowleft" size={24} color={colors.white} />
-            <Text style={{ marginLeft: 5, color: colors.white }}>
+            <AntDesign
+              name="arrowleft"
+              onPress={() => props.navigation.goBack()}
+              size={24}
+              color={colors.white}
+            />
+            <Text
+              onPress={() => props.navigation.goBack()}
+              style={{ marginLeft: 5, color: colors.white }}
+            >
               Back to My Profile
             </Text>
           </View>
@@ -119,7 +130,7 @@ const ViewRecipe = (props) => {
         horizontal
         style={{
           alignSelf: "center",
-          height: 50
+          height: 50,
         }}
       >
         <TouchableOpacity
@@ -195,7 +206,7 @@ const ViewRecipe = (props) => {
 
       {ingredients && (
         <ScrollView>
-          <View style={{flexDirection: 'row', alignItems: "center"}}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               style={{
                 width: 50,
@@ -206,9 +217,9 @@ const ViewRecipe = (props) => {
               }}
               source={raisin}
             />
-            <Text style={{paddingLeft: 15}}>cooking spray</Text>
+            <Text style={{ paddingLeft: 15 }}>cooking spray</Text>
           </View>
-          <View style={{flexDirection: 'row', alignItems: "center"}}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               style={{
                 width: 50,
@@ -219,9 +230,9 @@ const ViewRecipe = (props) => {
               }}
               source={raisin}
             />
-            <Text style={{paddingLeft: 15}}>1/2 cup whole milk</Text>
+            <Text style={{ paddingLeft: 15 }}>1/2 cup whole milk</Text>
           </View>
-          <View style={{flexDirection: 'row', alignItems: "center"}}>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               style={{
                 width: 50,
@@ -232,9 +243,10 @@ const ViewRecipe = (props) => {
               }}
               source={raisin}
             />
-            <Text style={{paddingLeft: 15}}>2 large eggs1 tablespoon maple syrups</Text>
+            <Text style={{ paddingLeft: 15 }}>
+              2 large eggs1 tablespoon maple syrups
+            </Text>
           </View>
-
         </ScrollView>
       )}
     </View>

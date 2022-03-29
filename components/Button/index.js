@@ -8,7 +8,7 @@ import { AntDesign } from "@expo/vector-icons";
 const Button = (props) => {
   if (props.big) {
     return (
-      <TouchableOpacity style={styles.big}>
+      <TouchableOpacity onPress={() => props.onPress()} style={styles.big}>
         <Text style={styles.btnName}>{props.btnName}</Text>
       </TouchableOpacity>
     );
@@ -27,7 +27,9 @@ const Button = (props) => {
       ) : (
         <AntDesign name="caretright" size={24} color={colors.green} />
       )}
-      <Text style={styles.btnName}>{props.btnName}</Text>
+      <Text style={[styles.btnName, { color: colors.green }]}>
+        {props.btnName}
+      </Text>
     </TouchableOpacity>
   );
 };
@@ -35,7 +37,7 @@ const Button = (props) => {
 const styles = StyleSheet.create({
   big: {
     backgroundColor: colors.green,
-    width: 325,
+    width: 315,
     height: 50,
     marginTop: 10,
     alignItems: "center",
@@ -55,7 +57,7 @@ const styles = StyleSheet.create({
     borderColor: colors.green,
   },
   btnName: {
-    color: colors.green,
+    color: colors.white,
     fontSize: 16,
     fontWeight: "700",
   },

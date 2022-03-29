@@ -60,7 +60,7 @@ const Recipe = (props) => {
             </Text>
           </View>
         </View>
-        <Image source={raisin} style={{ width: "100%", height: "65%" }} />
+        <Image source={raisin} style={{ width: "100%", height: "60%" }} />
 
         <View
           style={{
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     width: 300,
     overflow: "hidden",
     marginHorizontal: 10,
-    height: 500,
+    height: 450,
     borderColor: colors.grey,
     borderRadius: 8,
     shadowOpacity: 0.1,
