@@ -21,7 +21,7 @@ const UserProfile = (props) => {
   const [following, setFollowing] = useState(false);
   return (
     <View style={styles.container}>
-      <ProfileHeader />
+      <ProfileHeader {...props} />
       <View style={styles.accountDetails}>
         <TouchableOpacity
           style={{ alignItems: "center" }}
