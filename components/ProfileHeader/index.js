@@ -42,18 +42,28 @@ const ProfileHeader = (props) => {
           >
             Nick Evans
           </Text>
-          <SvgXml
-            xml={pen}
-            onPress={() => props.navigation.navigate("EditProfile")}
-          />
+          {!props.noIcon && (
+            <SvgXml
+              xml={pen}
+              onPress={() => props.navigation.navigate("EditProfile")}
+            />
+          )}
         </View>
         <Text style={{ fontSize: 14, color: "#606060" }}>Potato Master</Text>
         <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            width: "50%",
-          }}
+          style={
+            props.noIcon
+              ? {
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "70%",
+                }
+              : {
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "50%",
+                }
+          }
         >
           <Text style={{ fontSize: 14, color: "#606060" }}>
             584 followers .

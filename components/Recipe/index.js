@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, Modal } from "react-native";
-
-//svg xml
-import { SvgXml } from "react-native-svg";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Modal,
+  TouchableOpacity,
+} from "react-native";
 
 import { EvilIcons } from "@expo/vector-icons";
 
@@ -27,7 +31,10 @@ const Recipe = (props) => {
         <RecipeFeedSaveRecipe setModalVisible={setModalVisible} />
       </Modal>
       <View style={styles.recipe}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableOpacity
+          style={{ flexDirection: "row", alignItems: "center" }}
+          onPress={() => props.navigation.navigate("OtherUserProfile")}
+        >
           <Image
             source={profileImg}
             style={{
@@ -59,7 +66,7 @@ const Recipe = (props) => {
               2h ago
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
         <Image source={raisin} style={{ width: "100%", height: "60%" }} />
 
         <View
@@ -91,7 +98,7 @@ const Recipe = (props) => {
         <View style={styles.footerContainer}>
           <Text style={{ color: "#606060" }}>32 likes</Text>
           <Text style={{ color: "#606060" }}>8 Comments</Text>
-          <Button saveRecipe setModalVisible={setModalVisible}  btnName="Save" />
+          <Button saveRecipe setModalVisible={setModalVisible} btnName="Save" />
         </View>
       </View>
     </View>

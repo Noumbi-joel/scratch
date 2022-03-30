@@ -8,7 +8,7 @@ const RecipeFeedDisplay = (props) => {
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
-        <Recipe />
+        <Recipe {...props} />
         <Recipe />
         <Recipe />
         <Recipe />

@@ -51,6 +51,7 @@ import logo from "../assets/svg/logo";
 import logoText from "../assets/svg/centered-logo";
 import settings from "../assets/svg/setting";
 import logout from "../assets/svg/signout";
+import threeDots from "../assets/svg/three-dots";
 
 //colors
 import colors from "../utils/colors";
@@ -108,6 +109,18 @@ const RecipeFeedStack = (props) => {
           ),
         }}
         component={RecipeFeedDisplay}
+      />
+      <Stack.Screen
+        name="OtherUserProfile"
+        options={{
+          headerTitle: () => (
+            <Text style={{ color: colors.grey, fontSize: 16 }}>Back</Text>
+          ),
+          headerRight: () => (
+            <SvgXml xml={threeDots} style={{ marginRight: 20 }} />
+          ),
+        }}
+        component={OtherUserProfile}
       />
     </Stack.Navigator>
   );
