@@ -8,7 +8,10 @@ import { AntDesign } from "@expo/vector-icons";
 const Button = (props) => {
   if (props.big) {
     return (
-      <TouchableOpacity onPress={() => props.onPress()} style={styles.big}>
+      <TouchableOpacity
+        onPress={() => props.onPress()}
+        style={props.filterBtn ? [styles.big, {width: 255}] : styles.big}
+      >
         <Text style={styles.btnName}>{props.btnName}</Text>
       </TouchableOpacity>
     );
@@ -40,6 +43,7 @@ const styles = StyleSheet.create({
     width: 315,
     height: 50,
     marginTop: 10,
+    marginBottom: 10,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,

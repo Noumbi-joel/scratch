@@ -129,7 +129,11 @@ const RecipeFeedStack = (props) => {
 const SearchStack = (props) => {
   return (
     <Stack.Navigator initialRouteName="SearchSuggestion">
-      <Stack.Screen name="SearchSuggestion" component={SearchSuggestion} />
+      <Stack.Screen
+        name="SearchSuggestion"
+        options={{ headerShown: false }}
+        component={SearchSuggestion}
+      />
       <Stack.Screen name="SearchDisplay" component={SearchDisplay} />
       <Stack.Screen name="SearchFilter" component={SearchFilter} />
     </Stack.Navigator>
