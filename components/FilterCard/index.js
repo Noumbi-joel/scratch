@@ -5,7 +5,7 @@ import colors from "../../utils/colors";
 import { Slider } from "@miblanchard/react-native-slider";
 import Button from "../Button";
 
-const FilterCard = () => {
+const FilterCard = (props) => {
   const [value, setValue] = useState(0.2);
   return (
     <View style={styles.container}>
@@ -31,7 +31,12 @@ const FilterCard = () => {
         </View>
         <Text style={styles.text}>Search For</Text>
         <View style={styles.filterBtnContainer}>
-          <Button btnName="Apply Filter" big filterBtn />
+          <Button
+            onPress={() => props.setModalVisible(false)}
+            btnName="Apply Filter"
+            big
+            filterBtn
+          />
         </View>
       </View>
     </View>

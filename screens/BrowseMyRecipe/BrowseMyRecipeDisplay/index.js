@@ -54,7 +54,7 @@ const BrowseMyRecipe = (props) => {
               color: colors.green,
             }}
           >
-            Add New
+            Edit Recipe
           </Text>
         </TouchableOpacity>
       </View>

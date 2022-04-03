@@ -10,7 +10,14 @@ const Button = (props) => {
     return (
       <TouchableOpacity
         onPress={() => props.onPress()}
-        style={props.filterBtn ? [styles.big, {width: 255}] : styles.big}
+        style={
+          props.filterBtn
+            ? [styles.big, { width: 255 }]
+            : [
+                styles.big,
+                { backgroundColor: props.color ? props.color : colors.green },
+              ]
+        }
       >
         <Text style={styles.btnName}>{props.btnName}</Text>
       </TouchableOpacity>
@@ -18,7 +25,11 @@ const Button = (props) => {
   }
   return (
     <TouchableOpacity
-      style={styles.small}
+      style={
+        props.widthIncrease
+          ? [styles.small, { width: 130, height: 40 }]
+          : [styles.small]
+      }
       onPress={
         props.saveRecipe
           ? () => props.setModalVisible(true)

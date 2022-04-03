@@ -77,6 +77,15 @@ const Settings = (props) => {
         </>
       ))}
       <View style={styles.separator}></View>
+      <TouchableOpacity
+        onPress={() => props.navigation.navigate("NewRecipe")}
+        style={styles.changePassContainer}
+      >
+        <Text style={[styles.label, { fontSize: 16, color: colors.black }]}>
+          Add New Recipe
+        </Text>
+        <SvgXml xml={arrowRight} />
+      </TouchableOpacity>
       <TouchableOpacity style={styles.changePassContainer}>
         <Text style={[styles.label, { fontSize: 16, color: colors.black }]}>
           Change Password
@@ -96,7 +105,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  }, 
+  },
   explainContainer: {
     backgroundColor: "#e6e6e6",
     alignItems: "center",
