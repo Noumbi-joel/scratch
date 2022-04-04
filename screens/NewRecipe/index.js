@@ -74,8 +74,8 @@ const NewRecipe = (props) => {
               setSelectedLanguage(itemValue)
             }
           >
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
+            <Picker.Item label="Western(5)" value="western" />
+            <Picker.Item label="Lunch(0)" value="lunch" />
           </Picker>
           <Button widthIncrease saveRecipe btnName="Save Recipe" />
         </View>

@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   ScrollView,
 } from "react-native";
 
@@ -44,6 +43,7 @@ const BrowseMyRecipe = (props) => {
             flexDirection: "row",
             alignItems: "center",
           }}
+          onPress={() => props.navigation.navigate("EditRecipeDisplay")}
         >
           <AntDesign name="plus" size={24} color={colors.green} />
           <Text

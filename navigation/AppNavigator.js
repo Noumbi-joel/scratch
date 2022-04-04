@@ -38,6 +38,7 @@ import CookingModeFullScreen from "../screens/CookingMode/CookingModeFullScreen"
 import Settings from "../screens/Settings";
 import OtherUserProfile from "../screens/Profile/OtherUserProfile";
 import NewRecipe from "../screens/NewRecipe";
+import EditRecipeDisplay from "../screens/EditRecipe/EditRecipeDisplay";
 
 //images
 import btmTabIcon2 from "../assets/svg/btm_tab_icon_2";
@@ -172,6 +173,14 @@ const ProfileStack = (props) => {
         }}
         name="BrowseMyRecipeDisplay"
         component={BrowseMyRecipeDisplay}
+      />
+      <Stack.Screen
+        options={{
+          headerTitle: "Back to My Recipes ",
+          headerTitleStyle: { fontSize: 16, color: colors.grey },
+        }}
+        name="EditRecipeDisplay"
+        component={EditRecipeDisplay}
       />
       <Stack.Screen
         name="ViewRecipe"
