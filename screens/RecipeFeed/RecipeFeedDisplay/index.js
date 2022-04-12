@@ -7,7 +7,7 @@ import Recipe from "../../../components/Recipe";
 const RecipeFeedDisplay = (props) => {
   return (
     <View style={styles.container}>
-      <ScrollView horizontal>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <Recipe {...props} />
         <Recipe />
         <Recipe />

@@ -30,7 +30,11 @@ const SearchSuggestion = (props) => {
       </Modal>
       <SearchBar setModalVisible={setModalVisible} {...props} />
       <Text style={styles.categoryTitle}>Trending Recipes</Text>
-      <ScrollView horizontal style={{ margin: 10 }}>
+      <ScrollView
+        horizontal
+        style={{ margin: 10 }}
+        showsHorizontalScrollIndicator={false}
+      >
         <RecipeBox img={raisin} />
         <RecipeBox img={raisin} />
         <RecipeBox img={raisin} />
@@ -38,7 +42,7 @@ const SearchSuggestion = (props) => {
       </ScrollView>
 
       <Text style={styles.categoryTitle}>What can I make this..</Text>
-      <ScrollView horizontal>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <TouchableOpacity>
           <Text style={styles.cookMoment}>Morning</Text>
         </TouchableOpacity>
@@ -50,7 +54,11 @@ const SearchSuggestion = (props) => {
           <Text style={styles.cookMoment}>Tonight</Text>
         </TouchableOpacity>
       </ScrollView>
-      <ScrollView horizontal style={{ margin: 10 }}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ margin: 10 }}
+      >
         <RecipeBox img={raisin} />
         <RecipeBox img={raisin} />
         <RecipeBox img={raisin} />

@@ -86,8 +86,46 @@ const EditRecipe = (props) => {
         transparent={true}
         visible={modalVisible.galleryModal}
       >
-        <EditRecipeGallery colors={colors} closeModal={() => closeModal("galleryModal")} />
+        <EditRecipeGallery
+          colors={colors}
+          raisin={raisin}
+          closeModal={() => closeModal("galleryModal")}
+        />
       </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible.ings}
+      >
+        <EditRecipeIngredients
+          colors={colors}
+          closeModal={() => closeModal("ings")}
+        />
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible.htk}
+      >
+        <EditRecipeHowToCook
+          colors={colors}
+          closeModal={() => closeModal("htk")}
+        />
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible.addInfos}
+      >
+        <EditRecipeAdditInfos
+          colors={colors}
+          closeModal={() => closeModal("addInfos")}
+        />
+      </Modal>
+      
       <Text style={styles.screenTitle}>Edit Recipe</Text>
       <View style={styles.rowContainer}>
         <ImageBackground
@@ -116,13 +154,38 @@ const EditRecipe = (props) => {
             >
               {cat.title}
             </Text>
-            <TouchableOpacity
-              onPress={
-                cat.title === "Gallery" ? () => setModalVisible(true) : () => {}
-              }
-            >
-              <SvgXml xml={pen} />
-            </TouchableOpacity>
+            {cat.title === "Gallery" && (
+              <TouchableOpacity
+                onPress={() =>
+                  setModalVisible({ ...modalVisible, galleryModal: true })
+                }
+              >
+                <SvgXml xml={pen} />
+              </TouchableOpacity>
+            )}
+            {cat.title === "Ingredients" && (
+              <TouchableOpacity
+                onPress={() => setModalVisible({ ...modalVisible, ings: true })}
+              >
+                <SvgXml xml={pen} />
+              </TouchableOpacity>
+            )}
+            {cat.title === "How to Cook" && (
+              <TouchableOpacity
+                onPress={() => setModalVisible({ ...modalVisible, htk: true })}
+              >
+                <SvgXml xml={pen} />
+              </TouchableOpacity>
+            )}
+            {cat.title === "Additional Info" && (
+              <TouchableOpacity
+                onPress={() =>
+                  setModalVisible({ ...modalVisible, addInfos: true })
+                }
+              >
+                <SvgXml xml={pen} />
+              </TouchableOpacity>
+            )}
           </View>
           {cat.title === "Gallery" && (
             <Gallery colors={colors} images={cat.images} />
