@@ -31,15 +31,28 @@ import CustomButton from "../../../components/Button";
 import * as Yup from "yup";
 import { Formik } from "formik";
 
+//firebase
+import firebase from "firebase/compat";
+
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email("Invalid email @ and .(com, fr, ...) required").required("Required"),
+  email: Yup.string()
+    .email("Invalid email @ and .(com, fr, ...) required")
+    .required("Required"),
   password: Yup.string()
-    .min(4, "Too Short(>=4)!")
+    .min(6, "Too Short(>=6)!")
     .max(10, "Too Long(<=10)!")
     .required("Required"),
 });
 
 const Login = (props) => {
+  const onSignIn = (values) => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(values.email, values.password)
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.loginHeader}>
@@ -55,7 +68,7 @@ const Login = (props) => {
 
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values) => onSignIn(values)}
         validationSchema={validationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
@@ -71,11 +84,7 @@ const Login = (props) => {
               onBlur={handleBlur("email")}
               value={values.email}
             />
-            {errors && (
-              <Text style={styles.label}>
-                {errors.email}
-              </Text>
-            )}
+            {errors && <Text style={styles.label}>{errors.email}</Text>}
 
             <View style={styles.passwordContainer}>
               <Text style={styles.emailText}>Password</Text>
@@ -94,11 +103,7 @@ const Login = (props) => {
               onBlur={handleBlur("password")}
               value={values.password}
             />
-            {errors && (
-              <Text style={styles.label}>
-                {errors.password}
-              </Text>
-            )}
+            {errors && <Text style={styles.label}>{errors.password}</Text>}
 
             <View style={{ alignSelf: "center", alignItems: "center" }}>
               <CustomButton

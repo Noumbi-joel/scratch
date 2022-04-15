@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "127133976166",
+    "project_id": "scratch-86b10",
+    "storage_bucket": "scratch-86b10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127133976166:android:f32458edabba0453680fa7",
+        "android_client_info": {
+          "package_name": "com.nkjy.scratch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "127133976166-f31pkii6smjosusod6kphkvt5j84oe5q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJJKOabN3doX4zc64EZ62kLOG1ecVGYbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "127133976166-f31pkii6smjosusod6kphkvt5j84oe5q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

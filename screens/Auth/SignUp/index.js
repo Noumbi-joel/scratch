@@ -31,6 +31,7 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 
 //firebase
+import firebase from "firebase/compat";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string()
@@ -41,15 +42,19 @@ const validationSchema = Yup.object().shape({
     .email("Invalid email @ and .(com, fr, ...) required")
     .required("Required"),
   password: Yup.string()
-    .min(4, "Too Short(>=4)!")
+    .min(6, "Too Short(>=6)!")
     .max(10, "Too Long(<=10)!")
     .required("Required"),
 });
 
 const SignUp = (props) => {
-
+  
   const onSignUp = (values) => {
-    console.log(values)
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(values.email, values.password)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   return (
