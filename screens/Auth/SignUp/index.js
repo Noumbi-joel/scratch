@@ -30,6 +30,8 @@ import CustomButton from "../../../components/Button";
 import * as Yup from "yup";
 import { Formik } from "formik";
 
+//firebase
+
 const validationSchema = Yup.object().shape({
   fullName: Yup.string()
     .min(2, "Too Short(>=2)!")
@@ -45,6 +47,11 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignUp = (props) => {
+
+  const onSignUp = (values) => {
+    console.log(values)
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.loginHeader}>
@@ -61,7 +68,7 @@ const SignUp = (props) => {
 
       <Formik
         initialValues={{ fullName: "", email: "", password: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values) => onSignUp(values)}
         validationSchema={validationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
