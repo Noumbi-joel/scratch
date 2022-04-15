@@ -27,6 +27,18 @@ import colors from "../../../utils/colors";
 //components
 import CustomButton from "../../../components/Button";
 
+//validators
+import * as Yup from "yup";
+import { Formik } from "formik";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email("Invalid email @ and .(com, fr, ...) required").required("Required"),
+  password: Yup.string()
+    .min(4, "Too Short(>=4)!")
+    .max(10, "Too Long(<=10)!")
+    .required("Required"),
+});
+
 const Login = (props) => {
   return (
     <ScrollView style={styles.container}>
@@ -41,45 +53,74 @@ const Login = (props) => {
 
       <Text style={styles.pleaseText}>Please login to continue.</Text>
 
-      <Text style={[styles.emailText, { marginTop: 10 }]}>Email address</Text>
-      <TextInput
-        style={styles.textInput}
-        autoComplete="off"
-        keyboardType="email-address"
-      />
+      <Formik
+        initialValues={{ email: "", password: "" }}
+        onSubmit={(values) => console.log(values)}
+        validationSchema={validationSchema}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+          <>
+            <Text style={[styles.emailText, { marginTop: 10 }]}>
+              Email address
+            </Text>
+            <TextInput
+              style={styles.textInput}
+              autoComplete="off"
+              keyboardType="email-address"
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+            />
+            {errors && (
+              <Text style={styles.label}>
+                {errors.email}
+              </Text>
+            )}
 
-      <View style={styles.passwordContainer}>
-        <Text style={styles.emailText}>Password</Text>
-        <Text
-          style={styles.forgotPass}
-          onPress={() => props.navigation.navigate("forgot")}
-        >
-          Forgot Password?
-        </Text>
-      </View>
-      <TextInput
-        style={styles.textInput}
-        autoComplete="off"
-        secureTextEntry={true}
-      />
+            <View style={styles.passwordContainer}>
+              <Text style={styles.emailText}>Password</Text>
+              <Text
+                style={styles.forgotPass}
+                onPress={() => props.navigation.navigate("forgot")}
+              >
+                Forgot Password?
+              </Text>
+            </View>
+            <TextInput
+              style={styles.textInput}
+              autoComplete="off"
+              secureTextEntry={true}
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+            />
+            {errors && (
+              <Text style={styles.label}>
+                {errors.password}
+              </Text>
+            )}
 
-      <View style={{ alignSelf: "center", alignItems: "center" }}>
-        <CustomButton
-          {...props}
-          big
-          btnName="Login"
-          nextStack={["RecipeFeed", "RecipeFeedDisplay"]}
-        />
-        <Text style={{ marginTop: 10, color: colors.grey_text }}>
-          New to Scratch?
-        </Text>
-        <TouchableOpacity
-          style={{ marginTop: 5 }}
-          onPress={() => props.navigation.navigate("signup")}
-        >
-          <Text style={styles.createAcc}>Create Account Here</Text>
-        </TouchableOpacity>
-      </View>
+            <View style={{ alignSelf: "center", alignItems: "center" }}>
+              <CustomButton
+                {...props}
+                big
+                btnName="Login"
+                nextStack={["RecipeFeed", "RecipeFeedDisplay"]}
+                onPress={handleSubmit}
+              />
+              <Text style={{ marginTop: 10, color: colors.grey_text }}>
+                New to Scratch?
+              </Text>
+              <TouchableOpacity
+                style={{ marginTop: 5 }}
+                onPress={() => props.navigation.navigate("signup")}
+              >
+                <Text style={styles.createAcc}>Create Account Here</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </Formik>
     </ScrollView>
   );
 };

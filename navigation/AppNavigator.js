@@ -301,11 +301,11 @@ const AppNavigator = (props) => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName="Tabs"
+        initialRouteName="Auth"
       >
+        <Stack.Screen name="Auth" component={AuthStack} />
         <Stack.Screen name="Tabs" component={AppTabs} />
         <Stack.Screen name="RecipeFeed" component={RecipeFeedStack} />
-        <Stack.Screen name="Auth" component={AuthStack} />
         {/* <Stack.Screen name="HomeStack" component={HomeStack} /> */}
       </Stack.Navigator>
     </NavigationContainer>

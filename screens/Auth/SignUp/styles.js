@@ -86,6 +86,10 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: colors.black,
   },
+  label: {
+    color: "red",
+    marginLeft: 20,
+  },
 });
 
 export default styles;

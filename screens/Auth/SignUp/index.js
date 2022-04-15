@@ -26,6 +26,24 @@ import colors from "../../../utils/colors";
 //components
 import CustomButton from "../../../components/Button";
 
+//validators
+import * as Yup from "yup";
+import { Formik } from "formik";
+
+const validationSchema = Yup.object().shape({
+  fullName: Yup.string()
+    .min(2, "Too Short(>=2)!")
+    .max(25, "Too Long(<=10)!")
+    .required("Required"),
+  email: Yup.string()
+    .email("Invalid email @ and .(com, fr, ...) required")
+    .required("Required"),
+  password: Yup.string()
+    .min(4, "Too Short(>=4)!")
+    .max(10, "Too Long(<=10)!")
+    .required("Required"),
+});
+
 const SignUp = (props) => {
   return (
     <ScrollView style={styles.container}>
@@ -41,42 +59,67 @@ const SignUp = (props) => {
 
       <Text style={styles.pleaseText}>Create account to continue.</Text>
 
-      <Text style={[styles.emailText, { marginTop: 10 }]}>Full Name</Text>
-      <TextInput style={styles.textInput} autoComplete="off" />
+      <Formik
+        initialValues={{ fullName: "", email: "", password: "" }}
+        onSubmit={(values) => console.log(values)}
+        validationSchema={validationSchema}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+          <>
+            <Text style={[styles.emailText, { marginTop: 10 }]}>Full Name</Text>
+            <TextInput
+              style={styles.textInput}
+              autoComplete="off"
+              onChangeText={handleChange("fullName")}
+              onBlur={handleBlur("fullName")}
+              value={values.fullName}
+            />
+            {errors && <Text style={styles.label}>{errors.fullName}</Text>}
 
-      <Text style={[styles.emailText, { marginTop: 10 }]}>Email</Text>
-      <TextInput
-        style={styles.textInput}
-        autoComplete="off"
-        keyboardType="email-address"
-      />
+            <Text style={[styles.emailText, { marginTop: 10 }]}>Email</Text>
+            <TextInput
+              style={styles.textInput}
+              autoComplete="off"
+              keyboardType="email-address"
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+            />
+            {errors && <Text style={styles.label}>{errors.email}</Text>}
 
-      <View style={styles.passwordContainer}>
-        <Text style={styles.emailText}>Password</Text>
-      </View>
-      <TextInput
-        style={styles.textInput}
-        autoComplete="off"
-        secureTextEntry={true}
-      />
+            <View style={styles.passwordContainer}>
+              <Text style={styles.emailText}>Password</Text>
+            </View>
+            <TextInput
+              style={styles.textInput}
+              autoComplete="off"
+              secureTextEntry={true}
+              onChangeText={handleChange("password")}
+              onBlur={handleBlur("password")}
+              value={values.password}
+            />
+            {errors && <Text style={styles.label}>{errors.password}</Text>}
 
-      <View style={{ alignSelf: "center", alignItems: "center" }}>
-        <CustomButton
-          {...props}
-          big
-          btnName="Create Account"
-          nextStack={["RecipeFeed", "RecipeFeedDisplay"]}
-        />
-        <Text style={{ marginTop: 10, color: colors.grey_text }}>
-          Already have an account?
-        </Text>
-        <TouchableOpacity
-          style={{ marginTop: 5, marginBottom: 5 }}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Text style={styles.createAcc}>Login Here</Text>
-        </TouchableOpacity>
-      </View>
+            <View style={{ alignSelf: "center", alignItems: "center" }}>
+              <CustomButton
+                {...props}
+                big
+                btnName="Create Account"
+                onPress={handleSubmit}
+              />
+              <Text style={{ marginTop: 10, color: colors.grey_text }}>
+                Already have an account?
+              </Text>
+              <TouchableOpacity
+                style={{ marginTop: 5, marginBottom: 5 }}
+                onPress={() => props.navigation.goBack()}
+              >
+                <Text style={styles.createAcc}>Login Here</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </Formik>
     </ScrollView>
   );
 };

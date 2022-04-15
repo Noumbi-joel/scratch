@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet } from "react-native";
 
 //constants
 import Constants from "expo-constants";
@@ -85,6 +85,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "700",
     color: colors.black,
+  },
+  label: {
+    color: "red",
+    marginLeft: 20,
   },
 });
 
