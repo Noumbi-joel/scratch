@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 
 //svg xml
@@ -26,6 +27,7 @@ import colors from "../../../utils/colors";
 
 //components
 import CustomButton from "../../../components/Button";
+import LoadingOverlay from "../../../components/LoadingOverlay";
 
 //validators
 import * as Yup from "yup";
@@ -33,6 +35,9 @@ import { Formik } from "formik";
 
 //firebase
 import firebase from "firebase/compat";
+
+//localStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -44,14 +49,30 @@ const validationSchema = Yup.object().shape({
     .required("Required"),
 });
 
+import { AuthContext } from "../../../store/authContext";
+
+//auth functions
+import { onSignIn } from "../../../functions/auth";
+
 const Login = (props) => {
-  const onSignIn = (values) => {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(values.email, values.password)
-      .then((res) => console.log(res))
-      .catch((err) => console.error(err));
+  const [isAuth, setIsAuth] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+
+  const handleSignIn = async (values) => {
+    setIsAuth(true);
+    try {
+      const token = await onSignIn(values);
+      authCtx.authenticate(token);
+    } catch (err) {
+      console.log(err);
+      setIsAuth(false);
+    }
   };
+
+  if (isAuth) {
+    return <LoadingOverlay colors={colors} />;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -68,7 +89,7 @@ const Login = (props) => {
 
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => onSignIn(values)}
+        onSubmit={(values) => handleSignIn(values)}
         validationSchema={validationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (

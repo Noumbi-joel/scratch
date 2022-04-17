@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 
 //svg xml
@@ -30,8 +31,13 @@ import CustomButton from "../../../components/Button";
 import * as Yup from "yup";
 import { Formik } from "formik";
 
-//firebase
-import firebase from "firebase/compat";
+//context api
+import { AuthContext } from "../../../store/authContext";
+
+import LoadingOverlay from "../../../components/LoadingOverlay";
+
+//auth functions
+import { onSignUp } from "../../../functions/auth";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string()
@@ -48,13 +54,21 @@ const validationSchema = Yup.object().shape({
 });
 
 const SignUp = (props) => {
-  
-  const onSignUp = (values) => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(values.email, values.password)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+  const [isAuth, setIsAuth] = useState(false);
+  const authCtx = useContext(AuthContext);
+
+  const handleSignUp = async (values) => {
+    setIsAuth(true);
+    try {
+      const token = await onSignUp(values);
+      authCtx.authenticate(token);
+    } catch (err) {
+      Alert.alert(
+        "Authentication Failed!",
+        "Could not sign you up. Please check your credentials or try again later"
+      );
+      setIsAuth(false);
+    }
   };
 
   return (
@@ -73,7 +87,7 @@ const SignUp = (props) => {
 
       <Formik
         initialValues={{ fullName: "", email: "", password: "" }}
-        onSubmit={(values) => onSignUp(values)}
+        onSubmit={(values) => handleSignUp(values)}
         validationSchema={validationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors }) => (

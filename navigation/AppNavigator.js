@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -12,6 +12,12 @@ import { NavigationContainer } from "@react-navigation/native";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
+//context api
+import AuthContextProvider, { AuthContext } from "../store/authContext";
+
+//firebase
+import firebase from "firebase/compat";
 
 // ******* screens ******** //
 //Auth Stack
@@ -143,6 +149,7 @@ const SearchStack = (props) => {
 };
 
 const ProfileStack = (props) => {
+  const authCtx = useContext(AuthContext);
   return (
     <Stack.Navigator initialRouteName="UserProfile">
       <Stack.Screen
@@ -220,7 +227,7 @@ const ProfileStack = (props) => {
                 alignItems: "center",
                 marginRight: 60,
               }}
-              onPress={() => console.log("logout")}
+              onPress={() => authCtx.logout()}
             >
               <SvgXml xml={logout} width="100%" />
               <Text>Log Out</Text>
@@ -246,6 +253,7 @@ const AppTabs = (props) => {
   return (
     <Tab.Navigator
       screenOptions={{ tabBarStyle: styles.tabBarStyle, headerShown: false }}
+      initialRouteName="SearchStack"
     >
       <Tab.Screen
         name="SearchStack"
@@ -295,19 +303,11 @@ const AppTabs = (props) => {
 };
 
 const AppNavigator = (props) => {
+  const authCtx = useContext(AuthContext);
   return (
     <NavigationContainer theme={appTheme}>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-        initialRouteName="Auth"
-      >
-        <Stack.Screen name="Auth" component={AuthStack} />
-        <Stack.Screen name="Tabs" component={AppTabs} />
-        <Stack.Screen name="RecipeFeed" component={RecipeFeedStack} />
-        {/* <Stack.Screen name="HomeStack" component={HomeStack} /> */}
-      </Stack.Navigator>
+      {!authCtx.isAuthenticated && <AuthStack />}
+      {authCtx.isAuthenticated && <AppTabs />}
     </NavigationContainer>
   );
 };
