@@ -34,7 +34,7 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 
 //firebase
-import firebase from "firebase/compat";
+import firebase from "firebase";
 
 //localStorage
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -64,6 +64,10 @@ const Login = (props) => {
     try {
       const token = await onSignIn(values);
       authCtx.authenticate(token);
+      /* const timer = setTimeout(() => {
+        authCtx.logout();
+        return () => clearTimeout(timer);
+      }, 900000); */
     } catch (err) {
       console.log(err);
       setIsAuth(false);

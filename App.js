@@ -8,9 +8,7 @@ import AppNavigator from "./navigation/AppNavigator";
 import envs from "./config";
 
 //firebase import
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import "firebase/compat/firestore";
+import firebase from "firebase";
 
 //redux
 import { createStore, applyMiddleware } from "redux";
@@ -41,6 +39,10 @@ const firebaseConfig = {
   measurementId: envs.measurementId,
 };
 
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "./redux/actions/user";
+
 let app;
 
 if (firebase.apps.length === 0) {
@@ -52,7 +54,12 @@ if (firebase.apps.length === 0) {
 const Root = () => {
   const [isTryingLoggin, setIsTryingLoggin] = useState(true);
   const authCtx = useContext(AuthContext);
+
+  const dispatch = useDispatch();
+  const profileData = useSelector((state) => state.user.currentUser.value);
+
   useEffect(() => {
+    //authCtx.saveDb(getFirestore(app));
     const fetchToken = async () => {
       const storedToken = await AsyncStorage.getItem("token");
       if (storedToken) {
@@ -61,7 +68,9 @@ const Root = () => {
       setIsTryingLoggin(false);
     };
     fetchToken();
-  }, []);
+    dispatch(fetchUser());
+    console.log(profileData)
+  }, [dispatch]);
 
   if (isTryingLoggin) {
     return <AppLoading />;

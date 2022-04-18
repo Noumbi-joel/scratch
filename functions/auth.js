@@ -1,14 +1,13 @@
 import { Alert } from "react-native";
 
 //firebase
-import firebase from "firebase/compat";
+import firebase from "firebase";
 
 export const onSignUp = async (values) => {
   try {
-    const res = await firebase
-      .auth()
-      .createUserWithEmailAndPassword(values.email, values.password);
+    const res = await firebase.auth().createUserWithEmailAndPassword(values.email, values.password);
     const token = await res.user.getIdToken();
+    console.log(token);
     return token;
   } catch (err) {
     Alert.alert(
@@ -24,6 +23,7 @@ export const onSignIn = async (values) => {
       .auth()
       .signInWithEmailAndPassword(values.email, values.password);
     const token = await res.user.getIdToken();
+    console.log(token)
     return token;
   } catch (err) {
     Alert.alert(

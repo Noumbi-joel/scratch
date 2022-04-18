@@ -17,7 +17,7 @@ const Stack = createStackNavigator();
 import AuthContextProvider, { AuthContext } from "../store/authContext";
 
 //firebase
-import firebase from "firebase/compat";
+import firebase from "firebase";
 
 // ******* screens ******** //
 //Auth Stack

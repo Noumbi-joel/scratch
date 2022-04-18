@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Alert,
 } from "react-native";
 
 //svg xml
@@ -39,10 +38,17 @@ import LoadingOverlay from "../../../components/LoadingOverlay";
 //auth functions
 import { onSignUp } from "../../../functions/auth";
 
+//firebase
+import firebase from "firebase";
+
 const validationSchema = Yup.object().shape({
   fullName: Yup.string()
     .min(2, "Too Short(>=2)!")
     .max(25, "Too Long(<=10)!")
+    .required("Required"),
+  phone: Yup.number()
+    .min(6, "Too Short(>=9")
+    .max(100000000000000, "Too Long(<=15)")
     .required("Required"),
   email: Yup.string()
     .email("Invalid email @ and .(com, fr, ...) required")
@@ -62,14 +68,40 @@ const SignUp = (props) => {
     try {
       const token = await onSignUp(values);
       authCtx.authenticate(token);
+      try {
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .set({
+            fullName: values.fullName,
+            phone: values.phone,
+            imageUrl: "",
+            nbFollowers: 0,
+            recipes: [],
+            followingProfiles: [],
+            liveCooking: false,
+            email: values.email,
+            likesByUsers: 0,
+            createdAt: new Date().getTime().toString(),
+          });
+      } catch (err) {
+        console.log("doc written err: ", err);
+      }
+
+      /* const timer = setTimeout(() => {
+        authCtx.logout();
+        return () => clearTimeout(timer);
+      }, 900000); */
     } catch (err) {
-      Alert.alert(
-        "Authentication Failed!",
-        "Could not sign you up. Please check your credentials or try again later"
-      );
+      console.log(err);
       setIsAuth(false);
     }
   };
+
+  if (isAuth) {
+    return <LoadingOverlay colors={colors} />;
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -86,7 +118,7 @@ const SignUp = (props) => {
       <Text style={styles.pleaseText}>Create account to continue.</Text>
 
       <Formik
-        initialValues={{ fullName: "", email: "", password: "" }}
+        initialValues={{ fullName: "", phone: "", email: "", password: "" }}
         onSubmit={(values) => handleSignUp(values)}
         validationSchema={validationSchema}
       >
@@ -101,6 +133,19 @@ const SignUp = (props) => {
               value={values.fullName}
             />
             {errors && <Text style={styles.label}>{errors.fullName}</Text>}
+
+            <Text style={[styles.emailText, { marginTop: 10 }]}>
+              Phone Number
+            </Text>
+            <TextInput
+              style={styles.textInput}
+              autoComplete="off"
+              onChangeText={handleChange("phone")}
+              onBlur={handleBlur("phone")}
+              value={values.phone}
+              keyboardType="numeric"
+            />
+            {errors && <Text style={styles.label}>{errors.phone}</Text>}
 
             <Text style={[styles.emailText, { marginTop: 10 }]}>Email</Text>
             <TextInput

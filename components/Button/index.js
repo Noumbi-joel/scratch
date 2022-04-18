@@ -30,17 +30,9 @@ const Button = (props) => {
           ? [styles.small, { width: 130, height: 40 }]
           : [styles.small]
       }
-      onPress={
-        props.saveRecipe
-          ? () => props.setModalVisible(true)
-          : () => props.navigation.navigate(props.goto)
-      }
+      onPress={() => props.onPress()}
     >
-      {props.saveRecipe ? (
-        <AntDesign name="plus" size={24} color={colors.green} />
-      ) : (
-        <AntDesign name="caretright" size={24} color={colors.green} />
-      )}
+      {props.icon==="close" && <AntDesign name="close" size={20} color={colors.green} />}
       <Text style={[styles.btnName, { color: colors.green }]}>
         {props.btnName}
       </Text>
