@@ -12,36 +12,18 @@ import colors from "../../utils/colors";
 
 const ProfileHeader = (props) => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        width: 325,
-        alignSelf: "center",
-        /* borderWidth: 1,
-        borderColor: "red", */
-        borderBottomWidth: 1,
-        borderBottomColor: "#979797",
-        paddingVertical: 20,
-      }}
-    >
+    <View style={styles.container}>
       <Image
-        source={damon}
-        style={{ width: 82, height: 82, borderRadius: 50 }}
+        source={
+          props.profileData?.imageUrl
+            ? { uri: props.profileData.imageUrl }
+            : damon
+        }
+        style={styles.imageProfile}
       />
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: "68%",
-          }}
-        >
-          <Text
-            style={{ fontSize: 16, fontWeight: "700", color: colors.black }}
-          >
-            Nick Evans
-          </Text>
+      <View style={styles.subContainer}>
+        <View style={styles.rowDivided}>
+          <Text style={styles.fullName}>{props.profileData?.fullName}</Text>
           {!props.noIcon && (
             <SvgXml
               xml={pen}
@@ -49,30 +31,57 @@ const ProfileHeader = (props) => {
             />
           )}
         </View>
-        <Text style={{ fontSize: 14, color: "#606060" }}>Potato Master</Text>
-        <View
-          style={
-            props.noIcon
-              ? {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  width: "70%",
-                }
-              : {
-                  flexDirection: "row",
-                  alignItems: "center",
-                  width: "50%",
-                }
-          }
+        <Text
+          style={props?.profileData ? styles.textOnline : styles.textOffline}
         >
-          <Text style={{ fontSize: 14, color: "#606060" }}>
-            584 followers .
+          {props?.profileData ? "Online" : "Offline"}
+        </Text>
+        <View style={props.noIcon ? styles.noIconTrue : styles.noIconFalse}>
+          <Text style={styles.text}>
+            {props.profileData?.nbFollowers.length} followers .
           </Text>
-          <Text style={{ fontSize: 14, color: "#606060" }}> 23k likes</Text>
+          <Text style={styles.text}>
+            {props.profileData?.likesByUsers.length} likes
+          </Text>
         </View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: 325,
+    alignSelf: "center",
+    /* borderWidth: 1,
+    borderColor: "red", */
+    borderBottomWidth: 1,
+    borderBottomColor: "#979797",
+    paddingVertical: 20,
+    overflow: "hidden",
+  },
+  imageProfile: { width: 82, height: 82, borderRadius: 50 },
+  subContainer: { marginLeft: 5, width: 240 },
+  rowDivided: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  fullName: { fontSize: 16, fontWeight: "700", color: colors.black },
+  textOnline: { fontSize: 14, color: colors.green },
+  textOffline: { fontSize: 14, color: "red" },
+  noIconFalse: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "50%",
+  },
+  noIconTrue: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "70%",
+  },
+  text: { fontSize: 14, color: "#606060" },
+});
 
 export default ProfileHeader;

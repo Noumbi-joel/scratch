@@ -1,27 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  ImageBackground,
-  Dimensions
+  Image,
+  Dimensions,
 } from "react-native";
 
+//utils
 import raisin from "../../../assets/png/raisin.jpg";
+import colors from "../../../utils/colors";
 
 //components
 import ProfileHeader from "../../../components/ProfileHeader";
-import colors from "../../../utils/colors";
+import LoadingOverlay from "../../../components/LoadingOverlay";
+import ProfileGroupData from "../../../components/ProfileGroupData";
+
+//redux
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../../../redux/actions/user";
 
 const UserProfile = (props) => {
+  const dispatch = useDispatch();
+  const profileData = useSelector((state) => state.user.currentUser.value);
+  const isLoading = useSelector((state) => state.user.currentUser.isLoading);
+
   const [recipes, setRecipes] = useState(true);
   const [saved, setSaved] = useState(false);
   const [following, setFollowing] = useState(false);
+
+  console.log(profileData);
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <LoadingOverlay colors={colors} />;
+  }
+
   return (
     <View style={styles.container}>
-      <ProfileHeader {...props} />
+      <ProfileHeader profileData={profileData} {...props} />
       <View style={styles.accountDetails}>
         <TouchableOpacity
           style={{ alignItems: "center" }}
@@ -31,19 +53,10 @@ const UserProfile = (props) => {
             setFollowing(false);
           }}
         >
-          <Text style={styles.accountTextDetails}>20</Text>
-          <Text
-            style={
-              recipes
-                ? {
-                    borderBottomWidth: 3,
-                    borderColor: colors.green,
-                    color: colors.black,
-                    fontSize: 16,
-                  }
-                : { color: colors.black, fontSize: 16 }
-            }
-          >
+          <Text style={styles.accountTextDetails}>
+            {profileData?.recipes.length}
+          </Text>
+          <Text style={recipes ? styles.textTrue : styles.textFalse}>
             Recipes
           </Text>
         </TouchableOpacity>
@@ -56,21 +69,10 @@ const UserProfile = (props) => {
             setFollowing(false);
           }}
         >
-          <Text style={styles.accountTextDetails}>75</Text>
-          <Text
-            style={
-              saved
-                ? {
-                    borderBottomWidth: 3,
-                    borderColor: colors.green,
-                    color: colors.black,
-                    fontSize: 16,
-                  }
-                : { color: colors.black, fontSize: 16 }
-            }
-          >
-            Saved
+          <Text style={styles.accountTextDetails}>
+            {profileData?.savedRecipes.length}
           </Text>
+          <Text style={saved ? styles.textTrue : styles.textFalse}>Saved</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -81,144 +83,22 @@ const UserProfile = (props) => {
             setFollowing(true);
           }}
         >
-          <Text style={styles.accountTextDetails}>248</Text>
-          <Text
-            style={
-              following
-                ? {
-                    borderBottomWidth: 3,
-                    borderColor: colors.green,
-                    color: colors.black,
-                    fontSize: 16,
-                  }
-                : { color: colors.black, fontSize: 16 }
-            }
-          >
+          <Text style={styles.accountTextDetails}>
+            {profileData?.followingProfiles.length}
+          </Text>
+          <Text style={following ? styles.textTrue : styles.textFalse}>
             Following
           </Text>
         </TouchableOpacity>
       </View>
-      <ScrollView
-        contentContainerStyle={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-        }}
-      >
-        {recipes && (
-          <>
-            <TouchableOpacity
-              style={{
-                width: 150,
-                height: 132,
-                margin: 15,
-                borderRadius: 8,
-                borderWidth: 1,
-                borderColor: "red",
-              }}
-              onPress={() => props.navigation.navigate("BrowseMyRecipeDisplay")}
-            >
-              <ImageBackground
-                resizeMode="cover"
-                style={{ width: "100%", height: 90 }}
-                source={raisin}
-              />
-              <Text
-                style={{
-                  color: colors.black,
-                  fontSize: 16,
-                  textAlign: "center",
-                  marginTop: 5,
-                }}
-              >
-                Italian
-              </Text>
-            </TouchableOpacity>
-
-            <View
-              style={{
-                width: 150,
-                height: 132,
-                margin: 15,
-                borderRadius: 8,
-                borderWidth: 1,
-                borderColor: "red",
-              }}
-            >
-              <ImageBackground
-                resizeMode="cover"
-                style={{ width: "100%", height: 90 }}
-                source={raisin}
-              />
-              <Text
-                style={{
-                  color: colors.black,
-                  fontSize: 16,
-                  textAlign: "center",
-                  marginTop: 5,
-                }}
-              >
-                Italian
-              </Text>
-            </View>
-
-            <View
-              style={{
-                width: 150,
-                height: 132,
-                margin: 15,
-                borderRadius: 8,
-                borderWidth: 1,
-                borderColor: "red",
-              }}
-            >
-              <ImageBackground
-                resizeMode="cover"
-                style={{ width: "100%", height: 90 }}
-                source={raisin}
-              />
-              <Text
-                style={{
-                  color: colors.black,
-                  fontSize: 16,
-                  textAlign: "center",
-                  marginTop: 5,
-                }}
-              >
-                Italian
-              </Text>
-            </View>
-
-            <View
-              style={{
-                width: 150,
-                height: 132,
-                margin: 15,
-                borderRadius: 8,
-                borderWidth: 1,
-                borderColor: "red",
-              }}
-            >
-              <ImageBackground
-                resizeMode="cover"
-                style={{ width: "100%", height: 90 }}
-                source={raisin}
-              />
-              <Text
-                style={{
-                  color: colors.black,
-                  fontSize: 16,
-                  textAlign: "center",
-                  marginTop: 5,
-                }}
-              >
-                Italian
-              </Text>
-            </View>
-          </>
-        )}
-      </ScrollView>
+      <ProfileGroupData
+        recipes={recipes}
+        saved={saved}
+        following={following}
+        raisin={raisin}
+        colors={colors}
+        profileData={profileData}
+      />
     </View>
   );
 };
@@ -246,6 +126,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   borderBtm: { borderBottomWidth: 3, borderColor: colors.green },
+  textTrue: {
+    borderBottomWidth: 3,
+    borderColor: colors.green,
+    color: colors.black,
+    fontSize: 16,
+  },
+  textFalse: { color: colors.black, fontSize: 16 },
 });
 
 export default UserProfile;

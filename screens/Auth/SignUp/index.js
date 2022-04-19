@@ -77,12 +77,12 @@ const SignUp = (props) => {
             fullName: values.fullName,
             phone: values.phone,
             imageUrl: "",
-            nbFollowers: 0,
+            nbFollowers: [],
             recipes: [],
             followingProfiles: [],
             liveCooking: false,
             email: values.email,
-            likesByUsers: 0,
+            likesByUsers: [],
             createdAt: new Date().getTime().toString(),
           });
       } catch (err) {
