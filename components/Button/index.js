@@ -9,7 +9,7 @@ const Button = (props) => {
   if (props.big) {
     return (
       <TouchableOpacity
-        onPress={() => props.onPress()}
+        onPress={props.onPress}
         style={
           props.filterBtn
             ? [styles.big, { width: 255 }]
@@ -32,7 +32,9 @@ const Button = (props) => {
       }
       onPress={() => props.onPress()}
     >
-      {props.icon==="close" && <AntDesign name="close" size={20} color={colors.green} />}
+      {props.icon === "close" && (
+        <AntDesign name="close" size={20} color={colors.green} />
+      )}
       <Text style={[styles.btnName, { color: colors.green }]}>
         {props.btnName}
       </Text>

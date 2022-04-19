@@ -27,16 +27,13 @@ import CameraOrPicker from "../../../components/CameraOrPicker";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUser } from "../../../redux/actions/user";
+import { fetchUser, updateProfile } from "../../../redux/actions/user";
+import { UPDATE_PROFILE } from "../../../redux/constants";
 
 const validationSchema = Yup.object().shape({
   fullName: Yup.string()
-    .min(1, "Too Short!")
-    .max(51, "Too Long!")
-    .required("Required"),
-  bio: Yup.string()
-    .min(1, "Too Short!")
-    .max(101, "Too Long!")
+    .min(2, "Too Short!")
+    .max(25, "Too Long!")
     .required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
   phone: Yup.string()
@@ -51,6 +48,18 @@ const EditProfile = (props) => {
   const isLoading = useSelector((state) => state.user.currentUser.isLoading);
   const profileData = useSelector((state) => state.user.currentUser.value);
 
+  const updateProfileData = (values) => {
+    dispatch(
+      updateProfile(
+        UPDATE_PROFILE,
+        profileData?.imageUrl,
+        values.email,
+        values.fullName,
+        values.phone
+      )
+    );
+  };
+
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
@@ -61,7 +70,11 @@ const EditProfile = (props) => {
 
   return (
     <>
-      <Modal animationType="slide" visible={modalVisible} transparent={modalVisible}>
+      <Modal
+        animationType="slide"
+        visible={modalVisible}
+        transparent={modalVisible}
+      >
         <CameraOrPicker setModalVisible={setModalVisible} />
       </Modal>
       <View style={styles.container}>
@@ -72,7 +85,9 @@ const EditProfile = (props) => {
           onPress={() => setModalVisible(true)}
         >
           <Image
-            source={profileData?.imageUrl ? {uri: profileData.imageUrl} : damon}
+            source={
+              profileData?.imageUrl ? { uri: profileData.imageUrl } : damon
+            }
             style={{
               width: 100,
               height: 100,
@@ -89,7 +104,7 @@ const EditProfile = (props) => {
               email: profileData?.email,
               phone: profileData?.phone,
             }}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) => updateProfileData(values)}
             validationSchema={validationSchema}
           >
             {({ handleChange, handleSubmit, handleBlur, values, errors }) => (

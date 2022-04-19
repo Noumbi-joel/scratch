@@ -1,4 +1,9 @@
-import { CHANGE_IMG, FETCH_USER, SWITCH_LOADING } from "../../constants";
+import {
+  CHANGE_IMG,
+  FETCH_USER,
+  SWITCH_LOADING,
+  UPDATE_PROFILE,
+} from "../../constants";
 
 const initialState = {
   currentUser: {
@@ -28,6 +33,19 @@ const user = (state = initialState, action) => {
         currentUser: {
           ...state.currentUser,
           value: { ...state.currentUser.value, imageUrl: action.payload },
+        },
+      };
+    case UPDATE_PROFILE:
+      return {
+        ...state,
+        currentUser: {
+          ...state.currentUser,
+          value: {
+            ...state.currentUser.value,
+            email: action.payload.email,
+            fullName: action.payload.fullName,
+            phone: action.payload.phone,
+          },
         },
       };
     default:
