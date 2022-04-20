@@ -32,7 +32,18 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you share them with your friends."
+          "photosPermission": "Scratch accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/png/appLogo.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/notification-sound.wav",
+            "./assets/notification-sound-other.wav"
+          ]
         }
       ]
     ]
