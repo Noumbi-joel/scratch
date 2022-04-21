@@ -10,7 +10,7 @@ import {
   SAVE_REST_LOADING,
   SAVE_RECIPE_INGREDIENTS,
   UPDATE_RECIPE,
-  RECIPES
+  RECIPES,
 } from "../../constants";
 
 const initialState = {
@@ -24,7 +24,6 @@ const initialState = {
 };
 
 const recipe = (state = initialState, action) => {
-  const lastRecipe = state.recipes[state.recipes.length - 1];
   switch (action.type) {
     case SAVE_NAME_IMAGE_LOADING:
       return {
@@ -52,11 +51,13 @@ const recipe = (state = initialState, action) => {
         recipes: [...state.recipes, action.payload],
       };
     case SAVE_RECIPE_GALLERY:
-      lastRecipe.recipeGalleryImages = action.payload;
+      state.recipes[state.recipes.length - 1].recipeGalleryImages =
+        action.payload;
       return state;
 
     case SAVE_RECIPE_INGREDIENTS:
-      lastRecipe.recipeIngredients = action.payload;
+      state.recipes[state.recipes.length - 1].recipeIngredients =
+        action.payload;
       return state;
 
     case SAVE_RECIPE:

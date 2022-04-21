@@ -16,11 +16,39 @@ const NewRecipeModal = (props) => {
     return (
       <View style={styles.container}>
         <View style={[styles.subContainer, { height: 125 }]}>
-          {/* <Button widthIncrease btnName="Save" onPress={props.saveGalleryPick} /> */}
           <SvgXml
             xml={closeModal}
             style={{ alignSelf: "flex-end" }}
             onPress={props.closeModal}
+          />
+          <View style={styles.rowContainer}>
+            <Button
+              widthIncrease
+              btnName="Pick"
+              onPress={() => {
+                props.pickImage();
+              }}
+            />
+            <Button widthIncrease btnName="Finish" onPress={props.saveData} />
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  if (props.ingredients) {
+    return (
+      <View style={styles.container}>
+        <View style={[styles.subContainer, { height: 150 }]}>
+          <SvgXml
+            xml={closeModal}
+            style={{ alignSelf: "flex-end" }}
+            onPress={() => props.closeModal}
+          />
+          <TextInput
+            value={props.value}
+            onChangeText={props.handleChange}
+            style={styles.textInput}
           />
           <View style={styles.rowContainer}>
             <Button
@@ -41,7 +69,7 @@ const NewRecipeModal = (props) => {
       <View style={styles.subContainer}>
         <TextInput
           value={props.value}
-          onChangeText={props.handleChange}
+          onChangeText={(val) => props.handleChang(val)}
           style={styles.textInput}
         />
       </View>
@@ -81,6 +109,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     borderColor: colors.black,
+    marginTop: 5
   },
   rowContainer: {
     flexDirection: "row",

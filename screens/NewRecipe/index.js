@@ -8,6 +8,7 @@ import {
   ScrollView,
   Modal,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 
 //colors
@@ -36,17 +37,7 @@ import {
   saveIngredients,
   saveRecipe,
 } from "../../redux/actions/recipe";
-
-const categoryContent = [
-  {
-    title: "Gallery",
-    btnTitle: "Upload Images or Open Camera",
-    part: "partTwo",
-  },
-  { title: "Ingredients", btnTitle: "Add Ingredient", part: "partThree" },
-  { title: "How to Cook", btnTitle: "Add Directions", part: "partFour" },
-  { title: "Additional Info", btnTitle: "Add Info", part: "partFive" },
-];
+import LoadingOverlay from "../../components/LoadingOverlay";
 
 const NewRecipe = (props) => {
   const dispatch = useDispatch();
@@ -67,6 +58,7 @@ const NewRecipe = (props) => {
     partThree: {
       value: [],
       modalVisible: false,
+      text: "",
     },
     partFour: {
       value: [],
@@ -103,6 +95,16 @@ const NewRecipe = (props) => {
       }
     }
   };
+
+  /*  const saveGallery = () => {
+    if (recipe.partTwo.value.length == 0) {
+      return Alert.alert(
+        "YOUR CURRENT GALLERY IS EMPTY!",
+        "Please set at least one image in the gallery"
+      );
+    }
+    return dispatch(saveGallery(recipe.partTwo.value));
+  }; */
 
   const saveGalleryPick = (val) => {
     const copy = [...recipe.partTwo.value];
@@ -154,7 +156,19 @@ const NewRecipe = (props) => {
           gallery
           closeModal={() => handleModal("partTwo")}
           pickImage={() => pickImage("partTwo")}
-          saveData={() => dispatch(saveGallery(recipe.partTwo.value))}
+          saveData={() => {
+            if (recipe.partTwo.value.length == 0) {
+              return Alert.alert(
+                "YOUR CURRENT GALLERY ARE EMPTY!",
+                "Please set at least one image in the list"
+              );
+            }
+            setRecipe({
+              ...recipe,
+              partTwo: { ...recipe.partTwo, modalVisible: false },
+            });
+            return dispatch(saveGallery(recipe.partTwo.value));
+          }}
         />
       </Modal>
 
@@ -165,7 +179,29 @@ const NewRecipe = (props) => {
       >
         <NewRecipeModal
           ingredients
+          pickImage={() => pickImage("partThree")}
           closeModal={() => handleModal("partThree")}
+          value={recipe.partThree.text}
+          handleChange={(val) =>
+            setRecipe({
+              ...recipe,
+              partThree: { ...recipe.partThree, text: val },
+            })
+          }
+          saveData={() => {
+            /* if (recipe.partThree.value.length == 0) {
+              return Alert.alert(
+                "YOUR CURRENT INGREDIENTS ARE EMPTY!",
+                "Please set at least one ingredient in the list"
+              );
+            } */
+            console.log(recipe.partThree.text)
+            /* setRecipe({
+              ...recipe,
+              partThree: { ...recipe.partThree, modalVisible: false },
+            });
+            return dispatch(saveIngredients(recipe.partThree.value)); */
+          }}
         />
       </Modal>
 
@@ -216,41 +252,76 @@ const NewRecipe = (props) => {
             </View>
           </View>
         )}
-        {nameImage && (
-          <View style={styles.centered}>
-            <ActivityIndicator size="large" color={colors.green} />
-          </View>
+        {nameImage && <LoadingOverlay colors={colors} newRecipe />}
+
+        <Text
+          style={[
+            styles.screenTitle,
+            { fontSize: 16, fontWeight: "700", marginTop: 10 },
+          ]}
+        >
+          {`Gallery(${recipe.partTwo.value.length})`}
+        </Text>
+        {!gallery && (
+          <UploadBtn
+            launchModal={() => handleModal("partTwo")}
+            title="Upload Images"
+          />
         )}
-        {categoryContent.map((cat, index) => (
-          <View key={index}>
-            <View style={styles.rowHeaderContainer}>
-              <Text
-                style={[
-                  styles.screenTitle,
-                  { fontSize: 16, fontWeight: "700", marginTop: 10 },
-                ]}
-              >
-                {cat.title === "Gallery" &&
-                  `${cat.title}(${recipe.partTwo.value.length})`}
-                {cat.title === "Ingredients" &&
-                  `${cat.title}(${recipe.partThree.value.length})`}
-                {cat.title === "How to Cook" &&
-                  `${cat.title}(${recipe.partFour.value.length})`}
-                {cat.title === "Additional Info" &&
-                  `${cat.title}(${recipe.partFour.additionals.length})`}
-              </Text>
-              <TouchableOpacity>
-                <SvgXml xml={pen} />
-              </TouchableOpacity>
-            </View>
-            <UploadBtn
-              launchModal={() => handleModal(cat.part)}
-              title={cat.btnTitle}
-            />
-          </View>
-        ))}
-        <Text style={{ color: "#606060" }}>Save to</Text>
-        <View style={styles.rowHeaderContainer}>
+        {gallery && <LoadingOverlay colors={colors} newRecipe />}
+
+        <Text
+          style={[
+            styles.screenTitle,
+            { fontSize: 16, fontWeight: "700", marginTop: 10 },
+          ]}
+        >
+          {`Ingredients(${recipe.partThree.value.length})`}
+        </Text>
+        {!ingredients && (
+          <UploadBtn
+            launchModal={() => handleModal("partThree")}
+            title="Add Ingredient"
+          />
+        )}
+        {ingredients && <LoadingOverlay colors={colors} newRecipe />}
+
+        <Text
+          style={[
+            styles.screenTitle,
+            { fontSize: 16, fontWeight: "700", marginTop: 10 },
+          ]}
+        >
+          {`How To Cook(${recipe.partFour.value.length})`}
+        </Text>
+        {!rest && (
+          <UploadBtn
+            launchModal={() => handleModal("partTwo")}
+            title="Add Direction"
+          />
+        )}
+        {rest && <LoadingOverlay colors={colors} newRecipe />}
+
+        <Text
+          style={[
+            styles.screenTitle,
+            { fontSize: 16, fontWeight: "700", marginTop: 10 },
+          ]}
+        >
+          {`Additional Info(${recipe.partFour.additionals.length})`}
+        </Text>
+        {!rest && (
+          <UploadBtn
+            launchModal={() => handleModal("partTwo")}
+            title="Add Additional"
+          />
+        )}
+        {rest && <LoadingOverlay colors={colors} newRecipe />}
+      </View>
+
+      <Text style={{ color: "#606060", marginLeft: 20 }}>Save to</Text>
+      <View style={styles.rowHeaderContainer}>
+        {!rest && (
           <Picker
             style={{ width: 150 }}
             selectedValue={selectedLanguage}
@@ -261,8 +332,11 @@ const NewRecipe = (props) => {
             <Picker.Item label="Western(5)" value="western" />
             <Picker.Item label="Lunch(0)" value="lunch" />
           </Picker>
-          <Button widthIncrease saveRecipe btnName="Save Recipe" />
-        </View>
+        )}
+        {rest && <LoadingOverlay colors={colors} newRecipe />}
+        <Button widthIncrease saveRecipe btnName="Save Recipe" />
+      </View>
+      <View style={{ alignItems: "center" }}>
         <Button
           color={colors.btn}
           onPress={() => console.log("post nigga")}
@@ -288,6 +362,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginHorizontal: 20,
   },
   screenTitle: {
     fontSize: 24,

@@ -98,12 +98,11 @@ export const saveNameImage = (data) => async (dispatch) => {
 
 export const saveGallery = (data) => async (dispatch) => {
   const user = firebase.auth().currentUser;
-  const galleries = [];
   if (user !== null) {
     dispatch({ type: SAVE_GALLERY_LOADING, payload: true });
     try {
-      data.map((imageGallery) => {
-        const blob = new Promise((resolve, reject) => {
+      await data.map(async (imageGallery, index) => {
+        const blob = await new Promise((resolve, reject) => {
           const xhr = new XMLHttpRequest();
           xhr.onload = () => {
             resolve(xhr.response);
@@ -131,21 +130,33 @@ export const saveGallery = (data) => async (dispatch) => {
           },
           async () => {
             const url = await snapshot.snapshot.ref.getDownloadURL();
-            console.log("download url: " + url);
-            galleries.push(url);
+            console.log(`download url n*${index + 1}: ` + url);
+            try {
+              const snapshot = await firebase
+                .firestore()
+                .collection(RECIPES)
+                .doc(user.uid)
+                .get();
+              if (snapshot.exists) {
+                const copy = [...snapshot.data().recipeGalleryImages];
+                copy.push(url);
+                await firebase
+                  .firestore()
+                  .collection(RECIPES)
+                  .doc(user.uid)
+                  .update({
+                    recipeGalleryImages: copy,
+                  });
+                dispatch({ type: SAVE_RECIPE_GALLERY, payload: copy });
+              }
+            } catch (err) {
+              console.log("error while updating firestore: " + err);
+            }
             blob.close();
             return url;
           }
         );
       });
-      try {
-        await firebase.firestore().collection(RECIPES).doc(user.uid).update({
-          recipeGalleryImages: galleries,
-        });
-        dispatch({ type: SAVE_RECIPE_GALLERY, payload: galleries });
-      } catch (err) {
-        console.log("error while updating firestore: " + err);
-      }
     } catch (err) {
       console.log("error while uploading in storage: " + err);
     } finally {
@@ -156,7 +167,6 @@ export const saveGallery = (data) => async (dispatch) => {
 
 export const saveIngredients = (data) => async (dispatch) => {
   const user = firebase.auth().currentUser;
-  const ingredients = [];
   if (user !== null) {
     dispatch({ type: SAVE_INGREDIENTS_LOADING, payload: true });
     try {
@@ -175,7 +185,9 @@ export const saveIngredients = (data) => async (dispatch) => {
         const ref = firebase
           .storage()
           .ref(
-            `images/${user.email}/recipes/gallery/${new Date().toISOString()}`
+            `images/${
+              user.email
+            }/recipes/ingredients/${new Date().toISOString()}`
           );
         const snapshot = ref.put(blob);
 
@@ -190,20 +202,32 @@ export const saveIngredients = (data) => async (dispatch) => {
           async () => {
             const url = await snapshot.snapshot.ref.getDownloadURL();
             console.log("download url: " + url);
-            ingredients.push({ url: url, name: ingredient.name });
+            try {
+              const snapshot = await firebase
+                .firestore()
+                .collection(RECIPES)
+                .doc(user.uid)
+                .get();
+              if (snapshot.exists) {
+                const copy = [...snapshot.data().recipeIngredients];
+                copy.push({ url: url, name: ingredient.name });
+                await firebase
+                  .firestore()
+                  .collection(RECIPES)
+                  .doc(user.uid)
+                  .update({
+                    recipeIngredients: copy,
+                  });
+                dispatch({ type: SAVE_RECIPE_INGREDIENTS, payload: copy });
+              }
+            } catch (err) {
+              console.log("error while updating firestore: " + err);
+            }
             blob.close();
             return url;
           }
         );
       });
-      try {
-        await firebase.firestore().collection(RECIPES).doc(user.uid).update({
-          recipeIngredients: ingredients,
-        });
-        dispatch({ type: SAVE_RECIPE_INGREDIENTS, payload: ingredients });
-      } catch (err) {
-        console.log("error while updating firestore: " + err);
-      }
     } catch (err) {
       console.log("error while uploading in storage: " + err);
     } finally {

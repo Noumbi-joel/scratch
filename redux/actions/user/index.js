@@ -71,7 +71,11 @@ export const updateProfile =
             xhr.send(null);
           });
 
-          const ref = firebase.storage().ref(`images/${user.email}/${new Date().toISOString()}`);
+          const ref = firebase
+            .storage()
+            .ref(
+              `images/${user.email}/profile_images/${new Date().toISOString()}`
+            );
           const snapshot = ref.put(blob);
 
           snapshot.on(
@@ -108,4 +112,4 @@ export const updateProfile =
         }
       }
     }
-};
+  };
