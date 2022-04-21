@@ -52,8 +52,8 @@ const Settings = (props) => {
       <View style={styles.separator}></View>
       <Text style={styles.label}>Privacy Settings</Text>
       {instructions[1].map((inst, index) => (
-        <>
-          <View style={styles.instructionContainer} key={index}>
+        <React.Fragment key={index}>
+          <View style={styles.instructionContainer}>
             <Text style={[styles.label, { fontSize: 16, color: colors.black }]}>
               {inst.text}
             </Text>
@@ -74,7 +74,7 @@ const Settings = (props) => {
               </Text>
             </View>
           )}
-        </>
+        </React.Fragment>
       ))}
       <View style={styles.separator}></View>
       <TouchableOpacity

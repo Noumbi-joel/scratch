@@ -1,3 +1,4 @@
+//firebase
 import firebase from "firebase";
 
 //constants
@@ -6,6 +7,7 @@ import {
   SWITCH_LOADING,
   CHANGE_IMG,
   UPDATE_PROFILE,
+  USERS,
 } from "../../constants";
 
 export const fetchUser = () => async (dispatch) => {
@@ -15,8 +17,8 @@ export const fetchUser = () => async (dispatch) => {
       dispatch({ type: SWITCH_LOADING, loading: true });
       const snapshot = await firebase
         .firestore()
-        .collection("users")
-        .doc(firebase.auth().currentUser.uid)
+        .collection(USERS)
+        .doc(user.uid)
         .get();
       if (snapshot.exists) {
         return dispatch({ type: FETCH_USER, payload: snapshot.data() });
@@ -38,15 +40,22 @@ export const updateProfile =
       dispatch({ type: SWITCH_LOADING, loading: true });
       if (opType === UPDATE_PROFILE) {
         try {
-          dispatch({ type: UPDATE_PROFILE, payload: { email, fullName, phone } });
-          return await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
-            email: email,
-            fullName: fullName,
-            phone: phone,
+          dispatch({
+            type: UPDATE_PROFILE,
+            payload: { email, fullName, phone },
           });
-        }catch (err) {
-          console.log("error while updating profile data: " +err)
-        }finally {
+          return await firebase
+            .firestore()
+            .collection(USERS)
+            .doc(user.uid)
+            .update({
+              email: email,
+              fullName: fullName,
+              phone: phone,
+            });
+        } catch (err) {
+          console.log("error while updating profile data: " + err);
+        } finally {
           dispatch({ type: SWITCH_LOADING, loading: false });
         }
       } else {
@@ -62,7 +71,7 @@ export const updateProfile =
             xhr.send(null);
           });
 
-          const ref = firebase.storage().ref().child(new Date().toISOString());
+          const ref = firebase.storage().ref(`images/${user.email}/${new Date().toISOString()}`);
           const snapshot = ref.put(blob);
 
           snapshot.on(
@@ -80,8 +89,8 @@ export const updateProfile =
               try {
                 await firebase
                   .firestore()
-                  .collection("users")
-                  .doc(firebase.auth().currentUser.uid)
+                  .collection(USERS)
+                  .doc(user.uid)
                   .update({
                     imageUrl: url,
                   });
@@ -99,4 +108,4 @@ export const updateProfile =
         }
       }
     }
-  };
+};

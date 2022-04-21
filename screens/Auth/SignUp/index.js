@@ -8,6 +8,9 @@ import {
   Image,
 } from "react-native";
 
+//constants
+import { USERS } from "../../../redux/constants"
+
 //svg xml
 import { SvgXml } from "react-native-svg";
 
@@ -71,7 +74,7 @@ const SignUp = (props) => {
       try {
         await firebase
           .firestore()
-          .collection("users")
+          .collection(USERS)
           .doc(firebase.auth().currentUser.uid)
           .set({
             fullName: values.fullName,
@@ -79,6 +82,7 @@ const SignUp = (props) => {
             imageUrl: "",
             nbFollowers: [],
             recipes: [],
+            savedRecipes: [],
             followingProfiles: [],
             liveCooking: false,
             email: values.email,

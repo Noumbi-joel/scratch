@@ -11,7 +11,7 @@ export const onSignUp = async (values) => {
     return token;
   } catch (err) {
     Alert.alert(
-      "Authentication Failed!",
+      `Authentication Failed!: ${err.message}`,
       "Could not sign you up. Please check your credentials or try again later"
     );
   }
@@ -27,8 +27,8 @@ export const onSignIn = async (values) => {
     return token;
   } catch (err) {
     Alert.alert(
-      "Authentication Failed!",
-      "Could not sign you up. Please check your credentials or try again later"
+      `Authentication Failed!: ${err.message}`,
+      "Could not sign you in. Please check your credentials or try again later"
     );
   }
 };

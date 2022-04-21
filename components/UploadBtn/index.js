@@ -1,19 +1,33 @@
 import React from "react";
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 
 import { SvgXml } from "react-native-svg";
 import plus from "../../assets/svg/plus";
 
 const UploadBtn = (props) => {
   if (props.small) {
+    if (props.image) {
+      return (
+        <TouchableOpacity
+          style={styles.smallContainer}
+          onPress={() => props.pickImage("partOne")}
+        >
+          <Image
+            source={{ uri: props.image }}
+            resizeMode="cover"
+            style={{ width: "100%", height: "100%" }}
+          />
+        </TouchableOpacity>
+      );
+    }
     return (
-      <TouchableOpacity style={styles.smallContainer}>
+      <TouchableOpacity style={styles.smallContainer} onPress={props.pickImage}>
         <SvgXml xml={plus} />
       </TouchableOpacity>
     );
   }
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={props.launchModal}>
       <SvgXml xml={plus} />
       <Text>{props.title}</Text>
     </TouchableOpacity>
@@ -40,6 +54,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
 });
 
