@@ -62,8 +62,7 @@ const NewRecipe = (props) => {
     },
     partFour: {
       value: [],
-      additionals: [],
-      type: "",
+      text: "",
       modalVisible: false,
     },
     partFive: {
@@ -85,8 +84,8 @@ const NewRecipe = (props) => {
     if (!result.cancelled) {
       if (type === "partTwo") {
         saveGalleryPick(result.uri);
-        /* return dispatch(saveGallery(recipe.partFive.value)); */
       } else if (type === "partThree") {
+        saveIngredientsPick(result.uri);
       } else {
         setPartOne({ ...partOne, image: result.uri });
         return dispatch(
@@ -96,22 +95,21 @@ const NewRecipe = (props) => {
     }
   };
 
-  /*  const saveGallery = () => {
-    if (recipe.partTwo.value.length == 0) {
-      return Alert.alert(
-        "YOUR CURRENT GALLERY IS EMPTY!",
-        "Please set at least one image in the gallery"
-      );
-    }
-    return dispatch(saveGallery(recipe.partTwo.value));
-  }; */
-
   const saveGalleryPick = (val) => {
     const copy = [...recipe.partTwo.value];
     copy.push(val);
     setRecipe({
       ...recipe,
       partTwo: { ...recipe.partTwo, value: copy },
+    });
+  };
+
+  const saveIngredientsPick = (val) => {
+    const copy = [...recipe.partThree.value];
+    copy.push({ image: val, name: recipe.partThree.text });
+    setRecipe({
+      ...recipe,
+      partThree: { ...recipe.partThree, value: copy, text: "" },
     });
   };
 
@@ -131,15 +129,23 @@ const NewRecipe = (props) => {
         ...recipe,
         partThree: {
           ...recipe.partThree,
-          modalVisible: !recipe.partTwo.modalVisible,
+          modalVisible: !recipe.partThree.modalVisible,
         },
       });
-    } else {
+    } else if (part === "partFour") {
       return setRecipe({
         ...recipe,
         partFour: {
           ...recipe.partFour,
           modalVisible: !recipe.partFour.modalVisible,
+        },
+      });
+    } else {
+      return setRecipe({
+        ...recipe,
+        partFive: {
+          ...recipe.partFive,
+          modalVisible: !recipe.partFive.modalVisible,
         },
       });
     }
@@ -167,6 +173,7 @@ const NewRecipe = (props) => {
               ...recipe,
               partTwo: { ...recipe.partTwo, modalVisible: false },
             });
+            console.log(recipe.partTwo.value);
             return dispatch(saveGallery(recipe.partTwo.value));
           }}
         />
@@ -189,30 +196,19 @@ const NewRecipe = (props) => {
             })
           }
           saveData={() => {
-            /* if (recipe.partThree.value.length == 0) {
+            if (recipe.partThree.value.length == 0) {
               return Alert.alert(
                 "YOUR CURRENT INGREDIENTS ARE EMPTY!",
                 "Please set at least one ingredient in the list"
               );
-            } */
-            console.log(recipe.partThree.text)
-            /* setRecipe({
+            }
+            console.log(recipe.partThree.value);
+            setRecipe({
               ...recipe,
               partThree: { ...recipe.partThree, modalVisible: false },
             });
-            return dispatch(saveIngredients(recipe.partThree.value)); */
+            return dispatch(saveIngredients(recipe.partThree.value));
           }}
-        />
-      </Modal>
-
-      <Modal
-        visible={recipe.partThree.modalVisible}
-        animationType="slide"
-        transparent={true}
-      >
-        <NewRecipeModal
-          ingredients
-          closeModal={() => handleModal("partThree")}
         />
       </Modal>
 
@@ -221,7 +217,31 @@ const NewRecipe = (props) => {
         animationType="slide"
         transparent={true}
       >
-        <NewRecipeModal htk closeModal={() => handleModal("partFour")} />
+        <NewRecipeModal
+          ingredients
+          htk
+          closeModal={() => {
+            handleModal("partFour");
+            console.log(recipe.partFour.value);
+          }}
+          value={recipe.partFour.text}
+          handleChange={(val) =>
+            setRecipe({
+              ...recipe,
+              partFour: { ...recipe.partFour, text: val },
+            })
+          }
+          saveData={() => {
+            setRecipe({
+              ...recipe,
+              partFour: {
+                ...recipe.partFour,
+                value: [...recipe.partFour.value, recipe.partFour.text],
+                text: "",
+              },
+            });
+          }}
+        />
       </Modal>
 
       <Modal
@@ -230,8 +250,26 @@ const NewRecipe = (props) => {
         transparent={true}
       >
         <NewRecipeModal
-          additionals
-          closeModal={() => handleModal("partFive")}
+          closeModal={() => {
+            handleModal("partFive");
+            console.log(recipe.partFive.value);
+          }}
+          onSave={(values) => {
+            console.log(values);
+            setRecipe({
+              ...recipe,
+              partFive: {
+                ...recipe.partFive,
+                value: [
+                  ...recipe.partFive.value,
+                  values.servingTime,
+                  values.nutritions,
+                  values.tags,
+                ],
+                modalVisible: false,
+              },
+            });
+          }}
         />
       </Modal>
       <View style={styles.body}>
@@ -296,7 +334,7 @@ const NewRecipe = (props) => {
         </Text>
         {!rest && (
           <UploadBtn
-            launchModal={() => handleModal("partTwo")}
+            launchModal={() => handleModal("partFour")}
             title="Add Direction"
           />
         )}
@@ -308,11 +346,11 @@ const NewRecipe = (props) => {
             { fontSize: 16, fontWeight: "700", marginTop: 10 },
           ]}
         >
-          {`Additional Info(${recipe.partFour.additionals.length})`}
+          {`Additional Info(${recipe.partFive.value.length})`}
         </Text>
         {!rest && (
           <UploadBtn
-            launchModal={() => handleModal("partTwo")}
+            launchModal={() => handleModal("partFive")}
             title="Add Additional"
           />
         )}
@@ -329,12 +367,25 @@ const NewRecipe = (props) => {
               setSelectedLanguage(itemValue)
             }
           >
-            <Picker.Item label="Western(5)" value="western" />
-            <Picker.Item label="Lunch(0)" value="lunch" />
+            <Picker.Item label="Western" value="western" />
+            <Picker.Item label="Lunch" value="lunch" />
           </Picker>
         )}
         {rest && <LoadingOverlay colors={colors} newRecipe />}
-        <Button widthIncrease saveRecipe btnName="Save Recipe" />
+        <Button
+          widthIncrease
+          saveRecipe
+          btnName="Save Recipe"
+          onPress={() => {
+            dispatch(
+              saveRecipe(
+                selectedLanguage,
+                recipe.partFour.value,
+                recipe.partFive.value
+              )
+            );
+          }}
+        />
       </View>
       <View style={{ alignItems: "center" }}>
         <Button

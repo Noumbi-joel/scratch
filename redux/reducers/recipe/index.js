@@ -61,9 +61,9 @@ const recipe = (state = initialState, action) => {
       return state;
 
     case SAVE_RECIPE:
-      lastRecipe.type = action.payload.type;
-      lastRecipe.recipeHowToCook = action.payload.howToCook;
-      lastRecipe.recipeAdditionals = action.payload.additionals;
+      state.recipes[state.recipes.length - 1].type = action.payload.type;
+      state.recipes[state.recipes.length - 1].recipeHowToCook = action.payload.howToCook;
+      state.recipes[state.recipes.length - 1].recipeAdditionals = action.payload.additionals;
       return state;
 
     default:

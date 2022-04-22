@@ -44,8 +44,8 @@ const validationSchema = Yup.object().shape({
     .email("Invalid email @ and .(com, fr, ...) required")
     .required("Required"),
   password: Yup.string()
-    .min(6, "Too Short(>=6)!")
-    .max(10, "Too Long(<=10)!")
+    .min(6, "Too Short(>6)!")
+    .max(10, "Too Long(<10)!")
     .required("Required"),
 });
 
