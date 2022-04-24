@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 //constants
-import { USERS } from "../../../redux/constants"
+import { USERS } from "../../../redux/constants";
 
 //svg xml
 import { SvgXml } from "react-native-svg";
@@ -44,6 +44,9 @@ import { onSignUp } from "../../../functions/auth";
 //firebase
 import firebase from "firebase";
 
+//notifications
+import * as Notifications from "expo-notifications";
+
 const validationSchema = Yup.object().shape({
   fullName: Yup.string()
     .min(2, "Too Short(>=2)!")
@@ -62,6 +65,15 @@ const validationSchema = Yup.object().shape({
     .required("Required"),
 });
 
+//set notifications handler
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
 const SignUp = (props) => {
   const [isAuth, setIsAuth] = useState(false);
   const authCtx = useContext(AuthContext);
@@ -71,6 +83,13 @@ const SignUp = (props) => {
     try {
       const token = await onSignUp(values);
       authCtx.authenticate(token);
+      try {
+        await firebase
+          .auth()
+          .currentUser.updateProfile({ displayName: values.fullName });
+      } catch (err) {
+        console.log("error while updating auth profile: " + err);
+      }
       try {
         await firebase
           .firestore()
@@ -87,7 +106,8 @@ const SignUp = (props) => {
             liveCooking: false,
             email: values.email,
             likesByUsers: [],
-            createdAt: new Date().getTime().toString(),
+            createdAt: new Date().toISOString(),
+            expoPushToken: expoPushToken
           });
       } catch (err) {
         console.log("doc written err: ", err);
@@ -102,6 +122,69 @@ const SignUp = (props) => {
       setIsAuth(false);
     }
   };
+
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+
+ /*  const schedulePushNotification = async () => {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "You've got mail! 📬",
+        body: "Here is the notification body",
+        data: { data: "goes here" },
+      },
+      trigger: { seconds: 2 },
+    });
+  }; */
+
+  const registerForPushNotificationsAsync = async () => {
+    let token;
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: colors.green,
+      });
+    }
+
+    return token;
+  };
+
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   if (isAuth) {
     return <LoadingOverlay colors={colors} />;

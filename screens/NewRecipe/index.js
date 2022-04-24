@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
   ScrollView,
   Modal,
-  ActivityIndicator,
   Alert,
+  Platform
 } from "react-native";
 
 //colors
@@ -22,10 +21,6 @@ import UploadBtn from "../../components/UploadBtn";
 import Button from "../../components/Button";
 import NewRecipeModal from "../../components/NewRecipeModal";
 
-//svg
-import { SvgXml } from "react-native-svg";
-import pen from "../../assets/svg/decolored_pen";
-
 //image picker
 import * as ImagePicker from "expo-image-picker";
 
@@ -37,7 +32,9 @@ import {
   saveIngredients,
   saveRecipe,
 } from "../../redux/actions/recipe";
+
 import LoadingOverlay from "../../components/LoadingOverlay";
+
 
 const NewRecipe = (props) => {
   const dispatch = useDispatch();
@@ -174,7 +171,7 @@ const NewRecipe = (props) => {
               partTwo: { ...recipe.partTwo, modalVisible: false },
             });
             console.log(recipe.partTwo.value);
-            return dispatch(saveGallery(recipe.partTwo.value));
+            return dispatch(saveGallery(recipe.partTwo.value, partOne.name));
           }}
         />
       </Modal>
@@ -207,7 +204,7 @@ const NewRecipe = (props) => {
               ...recipe,
               partThree: { ...recipe.partThree, modalVisible: false },
             });
-            return dispatch(saveIngredients(recipe.partThree.value));
+            return dispatch(saveIngredients(recipe.partThree.value, partOne.name));
           }}
         />
       </Modal>
@@ -255,17 +252,16 @@ const NewRecipe = (props) => {
             console.log(recipe.partFive.value);
           }}
           onSave={(values) => {
-            console.log(values);
+            console.log(recipe.partFive.value);
+            const copy = [...recipe.partFive.value];
+            copy.push(values.servingTime);
+            copy.push(values.nutritions);
+            copy.push(values.tags);
             setRecipe({
               ...recipe,
               partFive: {
                 ...recipe.partFive,
-                value: [
-                  ...recipe.partFive.value,
-                  values.servingTime,
-                  values.nutritions,
-                  values.tags,
-                ],
+                value: copy,
                 modalVisible: false,
               },
             });
@@ -381,7 +377,8 @@ const NewRecipe = (props) => {
               saveRecipe(
                 selectedLanguage,
                 recipe.partFour.value,
-                recipe.partFive.value
+                recipe.partFive.value,
+                partOne.name
               )
             );
           }}
@@ -390,7 +387,7 @@ const NewRecipe = (props) => {
       <View style={{ alignItems: "center" }}>
         <Button
           color={colors.btn}
-          onPress={() => console.log("post nigga")}
+          onPress={() => props.navigation.popToTop()}
           big
           btnName="Post to Feed"
         />

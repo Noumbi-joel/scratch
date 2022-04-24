@@ -17,6 +17,7 @@ import {
 import firebase from "firebase";
 
 const copy = [];
+const _temp = [];
 
 export const saveNameImage = (data) => async (dispatch) => {
   const user = firebase.auth().currentUser;
@@ -54,7 +55,7 @@ export const saveNameImage = (data) => async (dispatch) => {
             const res = await firebase
               .firestore()
               .collection(RECIPES)
-              .doc(user.uid)
+              .doc(`${user.uid}-${data.name}`)
               .set({
                 type: "",
                 recipeName: data.name,
@@ -66,6 +67,12 @@ export const saveNameImage = (data) => async (dispatch) => {
                 isSaved: [],
                 nbLike: [],
                 isTrend: false,
+                userData: {
+                  email: user.email,
+                  photoUrl: user.photoURL,
+                  name: user.displayName,
+                },
+                createdAt: new Date().toISOString(),
               });
             console.log(res);
             dispatch({
@@ -81,6 +88,8 @@ export const saveNameImage = (data) => async (dispatch) => {
                 isSaved: [],
                 nbLike: [],
                 isTrend: false,
+                userData: user.providerData[0],
+                createdAt: new Date().toISOString(),
               },
             });
           } catch (err) {
@@ -112,7 +121,7 @@ const _blob = async (val) => {
   return blob;
 };
 
-export const saveGallery = (data) => async (dispatch) => {
+export const saveGallery = (data, name) => async (dispatch) => {
   const user = firebase.auth().currentUser;
   if (user !== null) {
     dispatch({ type: SAVE_GALLERY_LOADING, payload: true });
@@ -123,7 +132,7 @@ export const saveGallery = (data) => async (dispatch) => {
           const ref = firebase
             .storage()
             .ref(
-              `images/${user.email}/recipes/gallery/${new Date().toISOString()}`
+              `images/${user.email}/recipes/gallery/gallery-${new Date().toISOString()}`
             );
           const snapshot = ref.put(blob);
 
@@ -140,11 +149,10 @@ export const saveGallery = (data) => async (dispatch) => {
               console.log(`download url n*${index + 1}: ` + url);
               copy.push(url);
               try {
-                console.log(copy);
                 await firebase
                   .firestore()
                   .collection(RECIPES)
-                  .doc(user.uid)
+                  .doc(`${user.uid}-${name}`)
                   .update({
                     recipeGalleryImages: copy,
                   });
@@ -167,7 +175,7 @@ export const saveGallery = (data) => async (dispatch) => {
   }
 };
 
-export const saveIngredients = (data) => async (dispatch) => {
+export const saveIngredients = (data, name) => async (dispatch) => {
   const user = firebase.auth().currentUser;
   if (user !== null) {
     dispatch({ type: SAVE_INGREDIENTS_LOADING, payload: true });
@@ -180,7 +188,7 @@ export const saveIngredients = (data) => async (dispatch) => {
             .ref(
               `images/${
                 user.email
-              }/recipes/ingredients/${new Date().toISOString()}`
+              }/recipes/ingredients/ingredient-${new Date().toISOString()}`
             );
           const snapshot = ref.put(blob);
 
@@ -196,16 +204,16 @@ export const saveIngredients = (data) => async (dispatch) => {
               const url = await snapshot.snapshot.ref.getDownloadURL();
               console.log("download url: " + url);
               try {
-                copy.push({ url: url, name: item.name });
+                _temp.push({ url: url, name: item.name });
                 await firebase
                   .firestore()
                   .collection(RECIPES)
-                  .doc(user.uid)
+                  .doc(`${user.uid}-${name}`)
                   .update({
-                    recipeIngredients: copy,
+                    recipeIngredients: _temp,
                   });
-                dispatch({ type: SAVE_RECIPE_INGREDIENTS, payload: copy });
-                copy = [];
+                dispatch({ type: SAVE_RECIPE_INGREDIENTS, payload: _temp });
+                _temp = [];
               } catch (err) {
                 console.log("error while updating firestore: " + err);
               }
@@ -224,12 +232,12 @@ export const saveIngredients = (data) => async (dispatch) => {
 };
 
 export const saveRecipe =
-  (type, howToCook, additionals) => async (dispatch) => {
+  (type, howToCook, additionals, name) => async (dispatch) => {
     const user = firebase.auth().currentUser;
     if (user !== null) {
       dispatch({ type: SAVE_REST_LOADING, payload: true });
       try {
-        await firebase.firestore().collection(RECIPES).doc(user.uid).update({
+        await firebase.firestore().collection(RECIPES).doc(`${user.uid}-${name}`).update({
           recipeHowToCook: howToCook,
           recipeAdditionals: additionals,
           type: type,
@@ -249,103 +257,3 @@ export const saveRecipe =
       }
     }
   };
-/* const [first, snd, third] = await new Promise.all([
-      _blob(),
-      firebase
-        .storage()
-        .ref(`images/${user.email}/recipes/gallery/${new Date().toISOString()}`)
-        .put(first),
-      snd.on(
-        firebase.storage.TaskEvent.STATE_CHANGED,
-        () => {},
-        (error) => {
-          console.log(error);
-          first.close();
-          return;
-        },
-        async () => {
-          const url = await snapshot.snapshot.ref.getDownloadURL();
-          console.log(`download url n*${index + 1}: ` + url);
-          try {
-            const snapshot = await firebase
-              .firestore()
-              .collection(RECIPES)
-              .doc(user.uid)
-              .get();
-            if (snapshot.exists) {
-              const copy = [...snapshot.data().recipeGalleryImages];
-              copy.push(url);
-              await firebase
-                .firestore()
-                .collection(RECIPES)
-                .doc(user.uid)
-                .update({
-                  recipeGalleryImages: copy,
-                });
-              dispatch({ type: SAVE_RECIPE_GALLERY, payload: copy });
-            }
-          } catch (err) {
-            console.log("error while updating firestore: " + err);
-          }
-          first.close();
-          return url;
-        }
-      ),
-    ]); */
-
-/* for (const item in data) {
-        const blob = await new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.onload = () => {
-            resolve(xhr.response);
-          };
-          xhr.onerror = () => reject(new TypeError("Network Request Failed"));
-          xhr.responseType = "blob";
-          xhr.open("GET", item, true);
-          xhr.send(null);
-        });
-
-        const ref = firebase
-          .storage()
-          .ref(
-            `images/${user.email}/recipes/gallery/${new Date().toISOString()}`
-          );
-        const snapshot = ref.put(blob);
-
-        snapshot.on(
-          firebase.storage.TaskEvent.STATE_CHANGED,
-          () => {},
-          (error) => {
-            console.log(error);
-            blob.close();
-            return;
-          },
-          async () => {
-            const url = await snapshot.snapshot.ref.getDownloadURL();
-            console.log(`download url: ` + url);
-            try {
-              const snapshot = await firebase
-                .firestore()
-                .collection(RECIPES)
-                .doc(user.uid)
-                .get();
-              if (snapshot.exists) {
-                const copy = [...snapshot.data().recipeGalleryImages];
-                copy.push(url);
-                await firebase
-                  .firestore()
-                  .collection(RECIPES)
-                  .doc(user.uid)
-                  .update({
-                    recipeGalleryImages: copy,
-                  });
-                dispatch({ type: SAVE_RECIPE_GALLERY, payload: copy });
-              }
-            } catch (err) {
-              console.log("error while updating firestore: " + err);
-            }
-            blob.close();
-            return url;
-          }
-        );
-      } */

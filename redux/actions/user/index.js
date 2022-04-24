@@ -91,6 +91,13 @@ export const updateProfile =
               console.log("download url: " + url);
               dispatch({ type: CHANGE_IMG, payload: url });
               try {
+                try {
+                  user.updateProfile({
+                    photoURL: url,
+                  });
+                } catch (err) {
+                  console.log("error while updating auth profile: " + err);
+                }
                 await firebase
                   .firestore()
                   .collection(USERS)
