@@ -10,7 +10,9 @@ import {
   SAVE_REST_LOADING,
   SAVE_RECIPE_INGREDIENTS,
   UPDATE_RECIPE,
-  RECIPES,
+  FETCH_ALL_RECIPES,
+  FETCH_ALL_RECIPES_LOADING,
+  RECIPES
 } from "../../constants";
 
 const initialState = {
@@ -20,6 +22,7 @@ const initialState = {
     gallery: false,
     ingredients: false,
     rest: false,
+    recipeFeed: false,
   },
 };
 
@@ -66,6 +69,16 @@ const recipe = (state = initialState, action) => {
       state.recipes[state.recipes.length - 1].recipeAdditionals = action.payload.additionals;
       return state;
 
+    case FETCH_ALL_RECIPES: 
+      return {
+        ...state,
+        recipes: [...state.recipes, action.payload]
+      }
+    case FETCH_ALL_RECIPES_LOADING: 
+    return {
+      ...state,
+      isLoading: {...state.isLoading, recipeFeed: action.payload}
+    }
     default:
       return state;
   }

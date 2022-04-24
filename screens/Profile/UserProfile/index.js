@@ -26,12 +26,11 @@ const UserProfile = (props) => {
   const dispatch = useDispatch();
   const profileData = useSelector((state) => state.user.currentUser.value);
   const isLoading = useSelector((state) => state.user.currentUser.isLoading);
+  /* const recipesList = useSelector((state) => state.recipe.recipes); */
 
   const [recipes, setRecipes] = useState(true);
   const [saved, setSaved] = useState(false);
   const [following, setFollowing] = useState(false);
-
-  console.log(profileData);
 
   useEffect(() => {
     dispatch(fetchUser());

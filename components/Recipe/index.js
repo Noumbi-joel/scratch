@@ -23,6 +23,9 @@ import Button from "../Button";
 //colors
 import colors from "../../utils/colors";
 
+//moment
+import moment from "moment";
+
 const Recipe = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   return (
@@ -33,10 +36,19 @@ const Recipe = (props) => {
       <View style={styles.recipe}>
         <TouchableOpacity
           style={{ flexDirection: "row", alignItems: "center" }}
-          onPress={() => props.navigation.navigate("OtherUserProfile")}
+          onPress={() =>
+            props.navigation.navigate(
+              "OtherUserProfile",
+              props.recipe?.userData
+            )
+          }
         >
           <Image
-            source={profileImg}
+            source={
+              props.recipe
+                ? { uri: props.recipe?.userData?.photoUrl }
+                : profileImg
+            }
             style={{
               width: 32,
               height: 32,
@@ -53,7 +65,7 @@ const Recipe = (props) => {
                 lineHeight: 16,
               }}
             >
-              Profile Name
+              {props.recipe?.userData?.name}
             </Text>
             <Text
               style={{
@@ -63,11 +75,15 @@ const Recipe = (props) => {
                 lineHeight: 16,
               }}
             >
-              2h ago
+              {moment(props.recipe?.createdAt).fromNow()}
             </Text>
           </View>
         </TouchableOpacity>
-        <Image source={raisin} style={{ width: "100%", height: "60%" }} />
+        <Image
+          source={props.recipe ? { uri: props.recipe.recipeMainImage } : raisin}
+          resizeMode="cover"
+          style={{ width: "100%", height: "60%" }}
+        />
 
         <View
           style={{
@@ -85,7 +101,7 @@ const Recipe = (props) => {
               marginRight: 5,
             }}
           >
-            Red Wine and Mint Soufflé
+            {props.recipe?.recipeName}
           </Text>
           <EvilIcons name="heart" size={24} color="#363837" />
         </View>
@@ -96,9 +112,17 @@ const Recipe = (props) => {
         </Text>
 
         <View style={styles.footerContainer}>
-          <Text style={{ color: "#606060" }}>32 likes</Text>
-          <Text style={{ color: "#606060" }}>8 Comments</Text>
-          <Button saveRecipe setModalVisible={setModalVisible} btnName="Save" />
+          <Text style={{ color: "#606060" }}>
+            {props.recipe?.nbLike.length} likes
+          </Text>
+          <Text style={{ color: "#606060" }}>
+            {props.recipe?.comments.length} Comments
+          </Text>
+          <Button
+            onPress={() => setModalVisible(true)}
+            saveRecipe
+            btnName="Save"
+          />
         </View>
       </View>
     </View>

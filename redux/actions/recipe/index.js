@@ -11,6 +11,8 @@ import {
   SAVE_NAME_IMAGE_LOADING,
   UPDATE_RECIPE,
   RECIPES,
+  FETCH_ALL_RECIPES,
+  FETCH_ALL_RECIPES_LOADING,
 } from "../../constants";
 
 //firebase
@@ -73,6 +75,7 @@ export const saveNameImage = (data) => async (dispatch) => {
                   name: user.displayName,
                 },
                 createdAt: new Date().toISOString(),
+                comments: []
               });
             console.log(res);
             dispatch({
@@ -90,6 +93,7 @@ export const saveNameImage = (data) => async (dispatch) => {
                 isTrend: false,
                 userData: user.providerData[0],
                 createdAt: new Date().toISOString(),
+                comments: []
               },
             });
           } catch (err) {
@@ -132,7 +136,9 @@ export const saveGallery = (data, name) => async (dispatch) => {
           const ref = firebase
             .storage()
             .ref(
-              `images/${user.email}/recipes/gallery/gallery-${new Date().toISOString()}`
+              `images/${
+                user.email
+              }/recipes/gallery/gallery-${new Date().toISOString()}`
             );
           const snapshot = ref.put(blob);
 
@@ -237,11 +243,15 @@ export const saveRecipe =
     if (user !== null) {
       dispatch({ type: SAVE_REST_LOADING, payload: true });
       try {
-        await firebase.firestore().collection(RECIPES).doc(`${user.uid}-${name}`).update({
-          recipeHowToCook: howToCook,
-          recipeAdditionals: additionals,
-          type: type,
-        });
+        await firebase
+          .firestore()
+          .collection(RECIPES)
+          .doc(`${user.uid}-${name}`)
+          .update({
+            recipeHowToCook: howToCook,
+            recipeAdditionals: additionals,
+            type: type,
+          });
         dispatch({
           type: SAVE_RECIPE,
           payload: {
@@ -257,3 +267,22 @@ export const saveRecipe =
       }
     }
   };
+
+export const fetchRecipes = () => async (dispatch) => {
+  const user = firebase.auth().currentUser;
+  if (user !== null) {
+    dispatch({ type: FETCH_ALL_RECIPES_LOADING, payload: true });
+    try {
+      const snapshot = await firebase.firestore().collection(RECIPES).get();
+      if (!snapshot.empty) {
+        return snapshot.docs.map((doc) => {
+          dispatch({ type: FETCH_ALL_RECIPES, payload: doc.data() });
+        });
+      }
+    } catch (err) {
+      console.log("error while fetching recipes: " + err);
+    }finally{
+      dispatch({ type: FETCH_ALL_RECIPES_LOADING, payload: false });
+    }
+  }
+};

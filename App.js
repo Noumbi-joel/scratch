@@ -42,6 +42,7 @@ const firebaseConfig = {
 //redux
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "./redux/actions/user";
+import { fetchRecipes } from "./redux/actions/recipe";
 
 let app;
 
@@ -57,6 +58,8 @@ const Root = () => {
 
   const dispatch = useDispatch();
   const profileData = useSelector((state) => state.user.currentUser.value);
+  const recipesList = useSelector((state) => state.recipe.recipes);
+
 
   useEffect(() => {
     //authCtx.saveDb(getFirestore(app));
@@ -69,7 +72,9 @@ const Root = () => {
     };
     fetchToken();
     dispatch(fetchUser());
+    dispatch(fetchRecipes());
     console.log(profileData)
+    console.log(recipesList)
   }, [dispatch]);
 
   if (isTryingLoggin) {
