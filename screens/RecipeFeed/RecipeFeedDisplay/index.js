@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect, useCallback, useState } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 
 //components
 import Recipe from "../../../components/Recipe";
@@ -14,29 +14,36 @@ import { useSelector, useDispatch } from "react-redux";
 
 const RecipeFeedDisplay = (props) => {
   const dispatch = useDispatch();
+  const [recipes, setRecipes] = useState([]);
   const isLoading = useSelector((state) => state.recipe.isLoading.recipeFeed);
-  const recipes = useSelector((state) => state.recipe.recipes);
+  const items = useSelector((state) => state.recipe.recipes);
+
+  const getRecipes = useCallback(() => {
+    dispatch(fetchRecipes());
+    return items;
+  }, [items]);
 
   useEffect(() => {
-    dispatch(fetchRecipes());
-  }, [dispatch]);
+    setRecipes(getRecipes());
+    console.log("useEffect");
+  }, [getRecipes]);
 
   if (isLoading) {
     return <LoadingOverlay colors={colors} />;
   }
 
   return (
-    <View style={styles.container}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {recipes.length < 0 && (
-          <Text style={{ textAlign: "center" }}>
-            No recipes available, you can push your own now 😅
-          </Text>
+    <View style={!recipes.length ? styles.centered : styles.container}>
+      {!recipes.length && (
+        <Text>No recipes available, you can push your own now 😅</Text>
+      )}
+      <FlatList
+        data={recipes}
+        horizontal
+        renderItem={({ item, index }) => (
+          <Recipe {...props} recipe={item} key={index} />
         )}
-        {recipes.map((recipe, index) => (
-          <Recipe {...props} recipe={recipe} key={index} />
-        ))}
-      </ScrollView>
+      />
     </View>
   );
 };
@@ -44,6 +51,11 @@ const RecipeFeedDisplay = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

@@ -13,9 +13,10 @@ import { EvilIcons } from "@expo/vector-icons";
 //screens
 import RecipeFeedSaveRecipe from "../../screens/RecipeFeed/RecipeFeedSaveRecipe";
 
-//images
+//images and icons
 import profileImg from "../../assets/png/damon.jpg";
 import raisin from "../../assets/png/raisin.jpg";
+import { Ionicons } from "@expo/vector-icons";
 
 //components
 import Button from "../Button";
@@ -23,11 +24,21 @@ import Button from "../Button";
 //colors
 import colors from "../../utils/colors";
 
+//firebase
+import firebase from "firebase";
+
 //moment
 import moment from "moment";
 
+//redux
+import { useSelector, useDispatch } from "react-redux";
+import { handleLike } from "../../redux/actions/recipe";
+
 const Recipe = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const dispatch = useDispatch();
+
   return (
     <View style={styles.container}>
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
@@ -39,14 +50,14 @@ const Recipe = (props) => {
           onPress={() =>
             props.navigation.navigate(
               "OtherUserProfile",
-              props.recipe?.userData
+              props.recipe.userData
             )
           }
         >
           <Image
             source={
               props.recipe
-                ? { uri: props.recipe?.userData?.photoUrl }
+                ? { uri: props.recipe.userData.photoUrl }
                 : profileImg
             }
             style={{
@@ -65,7 +76,7 @@ const Recipe = (props) => {
                 lineHeight: 16,
               }}
             >
-              {props.recipe?.userData?.name}
+              {props.recipe.userData.name}
             </Text>
             <Text
               style={{
@@ -75,7 +86,7 @@ const Recipe = (props) => {
                 lineHeight: 16,
               }}
             >
-              {moment(props.recipe?.createdAt).fromNow()}
+              {moment(props.recipe.createdAt).fromNow()}
             </Text>
           </View>
         </TouchableOpacity>
@@ -101,9 +112,34 @@ const Recipe = (props) => {
               marginRight: 5,
             }}
           >
-            {props.recipe?.recipeName}
+            {props.recipe.recipeName}
           </Text>
-          <EvilIcons name="heart" size={24} color="#363837" />
+          <TouchableOpacity
+            onPress={() =>
+              dispatch(
+                handleLike(
+                  props.recipe.nbLike,
+                  firebase.auth().currentUser.email,
+                  props.recipe.recipeName,
+                  props.recipe.uid
+                )
+              )
+            }
+          >
+            <Ionicons
+              name={
+                props.recipe.nbLike.includes(firebase.auth().currentUser.email)
+                  ? "heart"
+                  : "heart-outline"
+              }
+              size={24}
+              color={
+                props.recipe.nbLike.includes(firebase.auth().currentUser.email)
+                  ? "red"
+                  : "#363837"
+              }
+            />
+          </TouchableOpacity>
         </View>
         <Text
           style={{ alignSelf: "center", color: colors.grey_text, width: 245 }}
@@ -113,10 +149,10 @@ const Recipe = (props) => {
 
         <View style={styles.footerContainer}>
           <Text style={{ color: "#606060" }}>
-            {props.recipe?.nbLike.length} likes
+            {props.recipe.nbLike.length} likes
           </Text>
           <Text style={{ color: "#606060" }}>
-            {props.recipe?.comments.length} Comments
+            {props.recipe.comments.length} Comments
           </Text>
           <Button
             onPress={() => setModalVisible(true)}

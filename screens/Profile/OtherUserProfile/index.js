@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   ImageBackground,
-  Dimensions
 } from "react-native";
 
 import raisin from "../../../assets/png/raisin.jpg";
@@ -18,9 +17,10 @@ import colors from "../../../utils/colors";
 const OtherUserProfile = (props) => {
   const [recipes, setRecipes] = useState(true);
   const [following, setFollowing] = useState(false);
+
   return (
     <View style={styles.container}>
-      <ProfileHeader noIcon {...props} />
+      <ProfileHeader noIcon {...props} profileData={props.route.params} />
       <View style={styles.accountDetails}>
         <TouchableOpacity
           style={{ alignItems: "center" }}

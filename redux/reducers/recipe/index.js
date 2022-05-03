@@ -12,7 +12,8 @@ import {
   UPDATE_RECIPE,
   FETCH_ALL_RECIPES,
   FETCH_ALL_RECIPES_LOADING,
-  RECIPES
+  LIKE_RECIPE,
+  RECIPES,
 } from "../../constants";
 
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
     rest: false,
     recipeFeed: false,
   },
+  hasLike: false,
 };
 
 const recipe = (state = initialState, action) => {
@@ -54,31 +56,55 @@ const recipe = (state = initialState, action) => {
         recipes: [...state.recipes, action.payload],
       };
     case SAVE_RECIPE_GALLERY:
-      state.recipes[state.recipes.length - 1].recipeGalleryImages =
-        action.payload;
+      state.recipes[state.recipes.length - 1].recipeGalleryImages.push(
+        action.payload
+      );
       return state;
 
     case SAVE_RECIPE_INGREDIENTS:
-      state.recipes[state.recipes.length - 1].recipeIngredients =
-        action.payload;
+      state.recipes[state.recipes.length - 1].recipeIngredients.push(
+        action.payload
+      );
       return state;
 
     case SAVE_RECIPE:
       state.recipes[state.recipes.length - 1].type = action.payload.type;
-      state.recipes[state.recipes.length - 1].recipeHowToCook = action.payload.howToCook;
-      state.recipes[state.recipes.length - 1].recipeAdditionals = action.payload.additionals;
+      state.recipes[state.recipes.length - 1].recipeHowToCook =
+        action.payload.howToCook;
+      state.recipes[state.recipes.length - 1].recipeAdditionals =
+        action.payload.additionals;
       return state;
 
-    case FETCH_ALL_RECIPES: 
+    case FETCH_ALL_RECIPES:
       return {
         ...state,
-        recipes: [...state.recipes, action.payload]
+        recipes: [...state.recipes, action.payload],
+      };
+    case FETCH_ALL_RECIPES_LOADING:
+      return {
+        ...state,
+        isLoading: { ...state.isLoading, recipeFeed: action.payload },
+      };
+
+    case LIKE_RECIPE:
+      const concernedRecipe = state.recipes.find(
+        (recipe) => recipe.recipeName === action.payload.recipeName
+      );
+
+      if (action.payload.currentStatus) {
+        concernedRecipe.nbLike.push(action.payload.likerEmail);
+      } else {
+        const index = concernedRecipe.nbLike.indexOf(action.payload.likerEmail);
+        if (index > -1) {
+          concernedRecipe.nbLike.splice(index, 1);
+        }
       }
-    case FETCH_ALL_RECIPES_LOADING: 
-    return {
-      ...state,
-      isLoading: {...state.isLoading, recipeFeed: action.payload}
-    }
+
+      return {
+        ...state,
+        recipes: [...state.recipes, concernedRecipe],
+      };
+
     default:
       return state;
   }

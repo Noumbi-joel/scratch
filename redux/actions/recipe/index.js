@@ -11,15 +11,14 @@ import {
   SAVE_NAME_IMAGE_LOADING,
   UPDATE_RECIPE,
   RECIPES,
+  LIKE,
+  LIKE_RECIPE,
   FETCH_ALL_RECIPES,
   FETCH_ALL_RECIPES_LOADING,
 } from "../../constants";
 
 //firebase
 import firebase from "firebase";
-
-const copy = [];
-const _temp = [];
 
 export const saveNameImage = (data) => async (dispatch) => {
   const user = firebase.auth().currentUser;
@@ -74,8 +73,9 @@ export const saveNameImage = (data) => async (dispatch) => {
                   photoUrl: user.photoURL,
                   name: user.displayName,
                 },
+                uid: user.uid,
                 createdAt: new Date().toISOString(),
-                comments: []
+                comments: [],
               });
             console.log(res);
             dispatch({
@@ -93,7 +93,8 @@ export const saveNameImage = (data) => async (dispatch) => {
                 isTrend: false,
                 userData: user.providerData[0],
                 createdAt: new Date().toISOString(),
-                comments: []
+                comments: [],
+                uid: user.uid,
               },
             });
           } catch (err) {
@@ -128,7 +129,6 @@ const _blob = async (val) => {
 export const saveGallery = (data, name) => async (dispatch) => {
   const user = firebase.auth().currentUser;
   if (user !== null) {
-    dispatch({ type: SAVE_GALLERY_LOADING, payload: true });
     try {
       await Promise.all(
         data.map(async (item, index) => {
@@ -151,19 +151,20 @@ export const saveGallery = (data, name) => async (dispatch) => {
               return;
             },
             async () => {
+              dispatch({ type: SAVE_GALLERY_LOADING, payload: true });
               const url = await snapshot.snapshot.ref.getDownloadURL();
               console.log(`download url n*${index + 1}: ` + url);
-              copy.push(url);
               try {
                 await firebase
                   .firestore()
                   .collection(RECIPES)
                   .doc(`${user.uid}-${name}`)
                   .update({
-                    recipeGalleryImages: copy,
+                    recipeGalleryImages:
+                      firebase.firestore.FieldValue.arrayUnion(url),
                   });
-                dispatch({ type: SAVE_RECIPE_GALLERY, payload: copy });
-                copy = [];
+                dispatch({ type: SAVE_RECIPE_GALLERY, payload: url });
+                dispatch({ type: SAVE_GALLERY_LOADING, loading: false });
               } catch (err) {
                 console.log("error while updating firestore: " + err);
               }
@@ -175,8 +176,6 @@ export const saveGallery = (data, name) => async (dispatch) => {
       );
     } catch (err) {
       console.log("error while uploading in storage: " + err);
-    } finally {
-      dispatch({ type: SAVE_GALLERY_LOADING, loading: false });
     }
   }
 };
@@ -184,7 +183,6 @@ export const saveGallery = (data, name) => async (dispatch) => {
 export const saveIngredients = (data, name) => async (dispatch) => {
   const user = firebase.auth().currentUser;
   if (user !== null) {
-    dispatch({ type: SAVE_INGREDIENTS_LOADING, payload: true });
     try {
       await Promise.all(
         data.map(async (item) => {
@@ -207,19 +205,24 @@ export const saveIngredients = (data, name) => async (dispatch) => {
               return;
             },
             async () => {
+              dispatch({ type: SAVE_INGREDIENTS_LOADING, payload: true });
               const url = await snapshot.snapshot.ref.getDownloadURL();
               console.log("download url: " + url);
               try {
-                _temp.push({ url: url, name: item.name });
                 await firebase
                   .firestore()
                   .collection(RECIPES)
                   .doc(`${user.uid}-${name}`)
                   .update({
-                    recipeIngredients: _temp,
+                    recipeIngredients: firebase.firestore.FieldValue.arrayUnion(
+                      { url: url, name: item.name }
+                    ),
                   });
-                dispatch({ type: SAVE_RECIPE_INGREDIENTS, payload: _temp });
-                _temp = [];
+                dispatch({
+                  type: SAVE_RECIPE_INGREDIENTS,
+                  payload: { url: url, name: item.name },
+                });
+                dispatch({ type: SAVE_INGREDIENTS_LOADING, loading: false });
               } catch (err) {
                 console.log("error while updating firestore: " + err);
               }
@@ -231,8 +234,6 @@ export const saveIngredients = (data, name) => async (dispatch) => {
       );
     } catch (err) {
       console.log("error while uploading in storage: " + err);
-    } finally {
-      dispatch({ type: SAVE_INGREDIENTS_LOADING, loading: false });
     }
   }
 };
@@ -260,10 +261,9 @@ export const saveRecipe =
             additionals: additionals,
           },
         });
+        dispatch({ type: SAVE_REST_LOADING, loading: false });
       } catch (err) {
         console.log("error while updating firestore: " + err);
-      } finally {
-        dispatch({ type: SAVE_REST_LOADING, loading: false });
       }
     }
   };
@@ -281,8 +281,33 @@ export const fetchRecipes = () => async (dispatch) => {
       }
     } catch (err) {
       console.log("error while fetching recipes: " + err);
-    }finally{
+    } finally {
       dispatch({ type: FETCH_ALL_RECIPES_LOADING, payload: false });
     }
   }
 };
+
+export const handleLike =
+  (nbLikes, likerEmail, recipeName, uid) => async (dispatch) => {
+    const user = firebase.auth().currentUser;
+    if (user !== null) {
+      const currentStatus = !nbLikes.includes(likerEmail);
+      try {
+        await firebase
+          .firestore()
+          .collection(RECIPES)
+          .doc(uid + "-" + recipeName)
+          .update({
+            nbLike: currentStatus
+              ? firebase.firestore.FieldValue.arrayUnion(likerEmail)
+              : firebase.firestore.FieldValue.arrayRemove(likerEmail),
+          });
+        dispatch({
+          type: LIKE_RECIPE,
+          payload: { recipeName: recipeName, currentStatus: currentStatus, likerEmail: likerEmail },
+        });
+      } catch (err) {
+        console.log("error while liking recipe: " + err);
+      }
+    }
+  };

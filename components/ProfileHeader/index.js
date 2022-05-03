@@ -11,6 +11,34 @@ import pen from "../../assets/svg/decolored_pen";
 import colors from "../../utils/colors";
 
 const ProfileHeader = (props) => {
+  if (props.noIcon) {
+    return (
+      <View style={styles.container}>
+        <Image
+          source={
+            props.profileData?.photoUrl
+              ? { uri: props.profileData.photoUrl }
+              : damon
+          }
+          style={styles.imageProfile}
+        />
+        <View style={styles.subContainer}>
+          <View style={styles.rowDivided}>
+            <Text style={styles.fullName}>{props.profileData?.name}</Text>
+          </View>
+          <Text
+            style={props.profileData ? styles.textOnline : styles.textOffline}
+          >
+            {props.profileData ? "Online" : "Offline"}
+          </Text>
+          <View style={props.noIcon ? styles.noIconTrue : styles.noIconFalse}>
+            <Text style={styles.text}>followers .</Text>
+            <Text style={styles.text}>likes</Text>
+          </View>
+        </View>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <Image
@@ -32,9 +60,9 @@ const ProfileHeader = (props) => {
           )}
         </View>
         <Text
-          style={props?.profileData ? styles.textOnline : styles.textOffline}
+          style={props.profileData ? styles.textOnline : styles.textOffline}
         >
-          {props?.profileData ? "Online" : "Offline"}
+          {props.profileData ? "Online" : "Offline"}
         </Text>
         <View style={props.noIcon ? styles.noIconTrue : styles.noIconFalse}>
           <Text style={styles.text}>
