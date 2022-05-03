@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
 //components
@@ -14,19 +14,12 @@ import { useSelector, useDispatch } from "react-redux";
 
 const RecipeFeedDisplay = (props) => {
   const dispatch = useDispatch();
-  const [recipes, setRecipes] = useState([]);
   const isLoading = useSelector((state) => state.recipe.isLoading.recipeFeed);
-  const items = useSelector((state) => state.recipe.recipes);
-
-  const getRecipes = useCallback(() => {
-    dispatch(fetchRecipes());
-    return items;
-  }, [items]);
+  const recipes = useSelector((state) => state.recipe.recipes);
 
   useEffect(() => {
-    setRecipes(getRecipes());
-    console.log("useEffect");
-  }, [getRecipes]);
+    dispatch(fetchRecipes());
+  }, [dispatch]);
 
   if (isLoading) {
     return <LoadingOverlay colors={colors} />;
