@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -33,11 +33,24 @@ import moment from "moment";
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import { handleLike } from "../../redux/actions/recipe";
+import { fetchUser, handleSavedRecipe } from "../../redux/actions/user";
 
 const Recipe = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
+  const currentUser = useSelector((state) => state.user.currentUser.value);
+  const savedRecipes = useSelector((state) => state.recipe.savedRecipes);
+  const recipes = useSelector((state) => state.recipe.recipes);
+
   const dispatch = useDispatch();
+
+  /* console.log(currentUser); */
+  /* console.log(props.recipe); */
+  console.log(currentUser?.savedRecipes);
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -48,10 +61,7 @@ const Recipe = (props) => {
         <TouchableOpacity
           style={{ flexDirection: "row", alignItems: "center" }}
           onPress={() =>
-            props.navigation.navigate(
-              "OtherUserProfile",
-              props.recipe.userData
-            )
+            props.navigation.navigate("OtherUserProfile", props.recipe.userData)
           }
         >
           <Image
@@ -142,9 +152,14 @@ const Recipe = (props) => {
           </TouchableOpacity>
         </View>
         <Text
-          style={{ alignSelf: "center", color: colors.grey_text, width: 245 }}
+          style={{
+            textAlign: "center",
+            color: colors.grey_text,
+            width: "100%",
+            marginVertical: 10,
+          }}
         >
-          Apparently we had reached a great height ...
+          Presented By Food Scratch & Co
         </Text>
 
         <View style={styles.footerContainer}>
@@ -155,9 +170,34 @@ const Recipe = (props) => {
             {props.recipe.comments.length} Comments
           </Text>
           <Button
-            onPress={() => setModalVisible(true)}
-            saveRecipe
-            btnName="Save"
+            onPress={() =>
+              dispatch(
+                handleSavedRecipe(
+                  {
+                    galleryImg: props.recipe.recipeGalleryImages,
+                    ingredients: props.recipe.recipeIngredients,
+                    recipeAdditionals: props.recipe.recipeAdditionals,
+                    recipeHTK: props.recipe.recipeHowToCook,
+                    recipeImg: props.recipe.recipeMainImage,
+                    recipeName: props.recipe.recipeName,
+                    type: props.recipe.type,
+                    uid: props.recipe.uid,
+                  },
+                  currentUser?.savedRecipes,
+                  firebase.auth().currentUser.email
+                )
+              )
+            }
+            icon={
+              props.recipe.isSaved.includes(firebase.auth().currentUser.email)
+                ? "check"
+                : ""
+            }
+            btnName={
+              props.recipe.isSaved.includes(firebase.auth().currentUser.email)
+                ? "Saved"
+                : "Save"
+            }
           />
         </View>
       </View>

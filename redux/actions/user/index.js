@@ -8,6 +8,9 @@ import {
   CHANGE_IMG,
   UPDATE_PROFILE,
   USERS,
+  SAVED_RECIPE,
+  IS_SAVED_EMAIL,
+  RECIPES,
 } from "../../constants";
 
 export const fetchUser = () => async (dispatch) => {
@@ -117,6 +120,53 @@ export const updateProfile =
         } finally {
           dispatch({ type: SWITCH_LOADING, loading: false });
         }
+      }
+    }
+  };
+
+export const handleSavedRecipe =
+  (recipeObj, savedUserArray, email) => async (dispatch) => {
+    const user = firebase.auth().currentUser;
+    if (user !== null) {
+      const currentStatus = !savedUserArray.some((el) => el.recipeName === recipeObj.recipeName)
+      console.log(currentStatus);
+      try {
+        await firebase
+          .firestore()
+          .collection(RECIPES)
+          .doc(`${recipeObj.uid}-${recipeObj.recipeName}`)
+          .update({
+            isSaved: currentStatus
+              ? firebase.firestore.FieldValue.arrayUnion(email)
+              : firebase.firestore.FieldValue.arrayRemove(email),
+          });
+        dispatch({
+          type: IS_SAVED_EMAIL,
+          payload: {
+            recipeName: recipeObj.recipeName,
+            currentStatus: currentStatus,
+            email: email,
+          },
+        });
+      } catch (err) {
+        console.log("error while updating isSaved array: " + err);
+      }
+      try {
+        await firebase
+          .firestore()
+          .collection(USERS)
+          .doc(user.uid)
+          .update({
+            savedRecipes: currentStatus
+              ? firebase.firestore.FieldValue.arrayUnion(recipeObj)
+              : firebase.firestore.FieldValue.arrayRemove(recipeObj),
+          });
+        dispatch({
+          type: SAVED_RECIPE,
+          payload: { recipeObj: recipeObj, currentStatus: currentStatus },
+        });
+      } catch (err) {
+        console.log(`error while ${uid} save a recipe: ` + err);
       }
     }
   };

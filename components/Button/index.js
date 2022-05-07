@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import colors from "../../utils/colors";
 
 import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const Button = (props) => {
   if (props.big) {
@@ -34,6 +35,9 @@ const Button = (props) => {
     >
       {props.icon === "close" && (
         <AntDesign name="close" size={20} color={colors.green} />
+      )}
+      {props.icon === "check" && (
+        <Ionicons name="checkmark-done-sharp" size={24} color={colors.green} />
       )}
       <Text style={[styles.btnName, { color: colors.green }]}>
         {props.btnName}

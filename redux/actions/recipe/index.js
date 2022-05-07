@@ -15,6 +15,8 @@ import {
   LIKE_RECIPE,
   FETCH_ALL_RECIPES,
   FETCH_ALL_RECIPES_LOADING,
+  USERS,
+  SAVED_RECIPE,
 } from "../../constants";
 
 //firebase
@@ -304,7 +306,11 @@ export const handleLike =
           });
         dispatch({
           type: LIKE_RECIPE,
-          payload: { recipeName: recipeName, currentStatus: currentStatus, likerEmail: likerEmail },
+          payload: {
+            recipeName: recipeName,
+            currentStatus: currentStatus,
+            likerEmail: likerEmail,
+          },
         });
       } catch (err) {
         console.log("error while liking recipe: " + err);

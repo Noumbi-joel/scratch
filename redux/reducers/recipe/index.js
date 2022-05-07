@@ -13,10 +13,12 @@ import {
   FETCH_ALL_RECIPES,
   FETCH_ALL_RECIPES_LOADING,
   LIKE_RECIPE,
-  RECIPES,
+  IS_SAVED_EMAIL,
+  SAVED_RECIPE,
 } from "../../constants";
 
 const initialState = {
+  savedRecipes: [],
   recipes: [],
   isLoading: {
     nameImage: false,
@@ -25,7 +27,6 @@ const initialState = {
     rest: false,
     recipeFeed: false,
   },
-  hasLike: false,
 };
 
 const recipe = (state = initialState, action) => {
@@ -80,6 +81,7 @@ const recipe = (state = initialState, action) => {
         ...state,
         recipes: [...state.recipes, action.payload],
       };
+
     case FETCH_ALL_RECIPES_LOADING:
       return {
         ...state,
@@ -103,6 +105,42 @@ const recipe = (state = initialState, action) => {
       return {
         ...state,
         recipes: [...state.recipes, concernedRecipe],
+      };
+
+    case IS_SAVED_EMAIL:
+      const recipeItem = state.recipes.find(
+        (recipe) => recipe.recipeName === action.payload.recipeName
+      );
+
+      if (action.payload.currentStatus) {
+        recipeItem.isSaved.push(action.payload.email);
+      } else {
+        const index = recipeItem.isSaved.indexOf(action.payload.email);
+        if (index > -1) {
+          recipeItem.isSaved.splice(index, 1);
+        }
+      }
+
+      return {
+        ...state,
+        recipes: [...state.recipes, recipeItem],
+      };
+
+    case SAVED_RECIPE:
+      const savedRecipeCopy = [...state.savedRecipes];
+
+      if (action.payload.currentStatus) {
+        savedRecipeCopy.push(action.payload.recipeObj);
+      } else {
+        const res = savedRecipeCopy.filter(
+          (recipe) =>
+            recipe.recipeName !== action.payload.recipeObj.recipeName
+        )
+        savedRecipeCopy.concat(res);
+      }
+      return {
+        ...state,
+        savedRecipes: savedRecipeCopy
       };
 
     default:

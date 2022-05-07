@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 
 //components
 import Recipe from "../../../components/Recipe";
@@ -30,13 +30,11 @@ const RecipeFeedDisplay = (props) => {
       {!recipes.length && (
         <Text>No recipes available, you can push your own now 😅</Text>
       )}
-      <FlatList
-        data={recipes}
-        horizontal
-        renderItem={({ item, index }) => (
-          <Recipe {...props} recipe={item} key={index} />
-        )}
-      />
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {recipes.map((recipe, index) => (
+          <Recipe {...props} recipe={recipe} key={index} />
+        ))}
+      </ScrollView>
     </View>
   );
 };
