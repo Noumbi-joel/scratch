@@ -4,49 +4,75 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  Text
+  Text,
+  View,
 } from "react-native";
 
 const index = (props) => {
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+    <ScrollView>
       {props.recipes && (
-        <>
-          <TouchableOpacity
-            style={styles.touchable}
-            onPress={() => props.navigation.navigate("BrowseMyRecipeDisplay")}
-          >
-            <Image
-              resizeMode="cover"
-              style={{ width: "100%", height: 90 }}
-              source={props.raisin}
-            />
-            <Text
-              style={[styles.touchableText, {color: props.colors.black}]}
-            >
-              Recipes
-            </Text>
-          </TouchableOpacity>
-        </>
+        <View
+          style={
+            props.recipesList.length
+              ? styles.scrollViewContent
+              : styles.scrollViewContentCentered
+          }
+        >
+          {!props.recipesList.length && <Text>No recipes 😉</Text>}
+          <>
+            {props.recipesList.map((recipe) => (
+              <TouchableOpacity
+                style={styles.touchable}
+                /* onPress={() => props.navigation.navigate("BrowseMyRecipeDisplay")} */
+              >
+                <Image
+                  resizeMode="cover"
+                  style={{ width: "100%", height: 90 }}
+                  source={{ uri: recipe.recipeMainImage }}
+                />
+                <Text
+                  style={[styles.touchableText, { color: props.colors.black }]}
+                >
+                  {recipe.recipeName}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </>
+        </View>
       )}
+
       {props.saved && (
-        <>
-          <TouchableOpacity
-            style={styles.touchable}
-            onPress={() => props.navigation.navigate("BrowseMyRecipeDisplay")}
-          >
-            <Image
-              resizeMode="cover"
-              style={{ width: "100%", height: 90 }}
-              source={props.raisin}
-            />
-            <Text
-              style={[styles.touchableText, {color: props.colors.black}]}
-            >
-              Saved
-            </Text>
-          </TouchableOpacity>
-        </>
+        <View
+          style={
+            props.savedRecipes.length
+              ? styles.scrollViewContent
+              : styles.scrollViewContentCentered
+          }
+        >
+          {!props.savedRecipes.length && <Text>No saved recipes 😉</Text>}
+          <>
+            {props.savedRecipes.map((recipe) => (
+              <TouchableOpacity
+                style={styles.touchable}
+                onPress={() =>
+                  props.navigation.navigate("BrowseMyRecipeDisplay")
+                }
+              >
+                <Image
+                  resizeMode="cover"
+                  style={{ width: "100%", height: 90 }}
+                  source={{ uri: recipe.recipeImg }}
+                />
+                <Text
+                  style={[styles.touchableText, { color: props.colors.black }]}
+                >
+                  {recipe.recipeName}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </>
+        </View>
       )}
       {props.following && (
         <>
@@ -59,9 +85,7 @@ const index = (props) => {
               style={{ width: "100%", height: 90 }}
               source={props.raisin}
             />
-            <Text
-              style={[styles.touchableText, {color: props.colors.black}]}
-            >
+            <Text style={[styles.touchableText, { color: props.colors.black }]}>
               Following
             </Text>
           </TouchableOpacity>
@@ -77,6 +101,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flexWrap: "wrap",
+  },
+  scrollViewContentCentered: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
   },
   touchable: {
     width: 150,

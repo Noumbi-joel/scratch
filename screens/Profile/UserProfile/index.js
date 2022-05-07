@@ -18,15 +18,23 @@ import ProfileHeader from "../../../components/ProfileHeader";
 import LoadingOverlay from "../../../components/LoadingOverlay";
 import ProfileGroupData from "../../../components/ProfileGroupData";
 
+//firebase
+import firebase from "firebase";
+
 //redux
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../../../redux/actions/user";
+import { fetchRecipes } from "../../../redux/actions/recipe";
 
 const UserProfile = (props) => {
   const dispatch = useDispatch();
   const profileData = useSelector((state) => state.user.currentUser.value);
   const isLoading = useSelector((state) => state.user.currentUser.isLoading);
-  /* const recipesList = useSelector((state) => state.recipe.recipes); */
+  const recipesList = useSelector((state) =>
+    state.recipe.recipes.filter(
+      (recipe) => recipe.uid === firebase.auth().currentUser.uid
+    )
+  );
 
   const [recipes, setRecipes] = useState(true);
   const [saved, setSaved] = useState(false);
@@ -34,6 +42,7 @@ const UserProfile = (props) => {
 
   useEffect(() => {
     dispatch(fetchUser());
+    dispatch(fetchRecipes());
   }, [dispatch]);
 
   if (isLoading) {
@@ -53,7 +62,7 @@ const UserProfile = (props) => {
           }}
         >
           <Text style={styles.accountTextDetails}>
-            {profileData?.recipes.length}
+            {recipesList.length}
           </Text>
           <Text style={recipes ? styles.textTrue : styles.textFalse}>
             Recipes
@@ -91,6 +100,8 @@ const UserProfile = (props) => {
         </TouchableOpacity>
       </View>
       <ProfileGroupData
+        recipesList={recipesList}
+        savedRecipes={profileData?.savedRecipes}
         recipes={recipes}
         saved={saved}
         following={following}
